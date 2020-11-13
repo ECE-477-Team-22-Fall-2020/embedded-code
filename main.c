@@ -14,6 +14,7 @@
 #include "oled_driver.h"
 #include "utility.h"
 #include "graphics.h"
+#include "board.h"
 
 #define PAWN_ID 0
 #define BISHOP_ID 1
