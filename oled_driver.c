@@ -28,17 +28,9 @@
  * redistribution
  */
 //
-//#include "stm32f4xx.h"
-//#include "stm32f4_discovery.h"
 
 #include "oled_driver.h"
 #include "utility.h"
-#include "gfxfont.h"
-
-//#include "tm_stm32f4_spi.h"
-
-// a 5x7 font table
-extern const uint8_t font[]; //!< A 5x7 font table
 
 // the memory buffer for the LCD
 
