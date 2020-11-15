@@ -1,3 +1,13 @@
+/*
+ * graphics.h
+ *
+ *  Created on: Oct 20, 2020
+ *      Author: Ian Haggerty
+ */
+
+#ifndef GRAPHICS_H_
+#define GRAPHICS_H_
+
 #include "oled_driver.h"
 
 #include "gfxfont.h"
@@ -229,6 +239,7 @@ const static unsigned char blank_bitmap_bits[] = {
 
 
 void drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
+void clearArea(int x, int y, int width, int height);
 int drawString(char * string, int x, int y);
 void drawPiece(int id);
 void drawPawn(void);
@@ -250,3 +261,4 @@ void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
 void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
 void drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y);
 
+#endif

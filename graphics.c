@@ -29,6 +29,14 @@ void drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t
   }
 }
 
+void clearArea(int x, int y, int width, int height) {
+    for (int i = x; i < x + width; i++) {
+        for (int j = y; j < y + height; j++) {
+            drawPixel(i, j, BLACK);
+        }
+    }
+}
+
 int drawString(char * string, int x, int y) {
 	if (string == NULL) return 0;
 	char current_char = string[0];
