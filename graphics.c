@@ -2,9 +2,6 @@
 #include "graphics.h"
 #include "glcdfont.c"
 
-#define initial_ui_width 128
-#define initial_ui_height 64
-
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                    \
   {                                                                            \
@@ -13,6 +10,31 @@
     b = t;                                                                     \
   }
 #endif
+
+// sets up the basic background UI
+void setupUI() {
+    clearArea(0, 0, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT);
+
+    // will want to eventually initialize this to "No active match"; will need width and height of the region to reset to that
+    drawString("Playing: ", PLAYER_X, PLAYER_Y);
+    drawUsername("ggargle");
+
+    drawString("Phone: ", PHONE_STATE_X, PHONE_STATE_Y);
+
+    // TODO: Make check mark and x mark graphics to be inserted here
+
+    drawString("Score:", SCORE_HEADER_X, SCORE_HEADER_Y);
+    resetScoreString();
+    drawScore();
+
+    // TODO: Make the following section draw the right info (enemy versus your potential moves). currently static
+    drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
+    drawString("C3", EXTRA_INFO_X, EXTRA_INFO_Y - LINE_HEIGHT);
+    drawString("C4", EXTRA_INFO_X, EXTRA_INFO_Y - (2 * LINE_HEIGHT));
+
+    drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
+}
+
 
 //Draw XBitMap Files (*.xbm), exported from GIMP,
 //Usage: Export from GIMP to *.xbm, rename *.xbm to *.c and open in editor.
@@ -49,46 +71,54 @@ int drawString(char * string, int x, int y) {
 	return i;
 }
 
+void drawUsername(char * username) {
+	drawString(username, USERNAME_X, USERNAME_Y);
+}
+
+void drawScore() {
+	drawString(scoreString, SCORE_X, SCORE_Y);
+}
+
 void drawPiece(int id) {
 	switch (id) {
-	case 0: return drawPawn();
-	case 1: return drawBishop();
-	case 2: return drawKnight();
-	case 3: return drawRook();
-	case 4: return drawQueen();
-	case 5: return drawKing();
+	case PAWN_ID: return drawPawn();
+	case BISHOP_ID: return drawBishop();
+	case KNIGHT_ID: return drawKnight();
+	case ROOK_ID: return drawRook();
+	case QUEEN_ID: return drawQueen();
+	case KING_ID: return drawKing();
 	default: return clearPiece();
 	}
 }
 
 void drawPawn() {
-	drawXBitmap(48, 14, pawn_bitmap_bits, 27, 47, WHITE);
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, pawn_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
 }
 
 void drawBishop(void) {
-	drawXBitmap(48, 14, bishop_bitmap_bits, 27, 47, WHITE);
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, bishop_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
 
 }
 void drawKnight(void) {
-	drawXBitmap(48, 14, knight_bitmap_bits, 27, 47, WHITE);
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, knight_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
 
 
 }
 void drawRook(void) {
-	drawXBitmap(48, 14, rook_bitmap_bits, 27, 47, WHITE);
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, rook_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
 }
 
 void drawQueen(void) {
-	drawXBitmap(48, 14, queen_bitmap_bits, 27, 47, WHITE);
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, queen_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
 
 
 }
 void drawKing(void) {
-	drawXBitmap(48, 14, king_bitmap_bits, 27, 47, WHITE);
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, king_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
 }
 
 void clearPiece() {
-	drawXBitmap(48, 14, blank_bitmap_bits, 27, 47, BLACK);
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, blank_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, BLACK);
 }
 
 /**************************************************************************/

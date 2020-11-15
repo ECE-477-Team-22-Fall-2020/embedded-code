@@ -13,10 +13,41 @@
 #include "gfxfont.h"
 #include "stm32f4xx.h"
 #include "stm32f411e_discovery.h"
+#include "utility.h"
 
 #ifndef pgm_read_byte
 #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
 #endif
+
+#define CHAR_WIDTH 6
+#define LINE_HEIGHT 10
+
+/**SCREEN REGION DEFINITIONS**/
+
+#define PIECE_REGION_X 48
+#define PIECE_REGION_Y 14
+#define PIECE_REGION_W 27
+#define PIECE_REGION_H 47
+
+#define PLAYER_X 1
+#define PLAYER_Y 1
+
+#define USERNAME_X (PLAYER_X + (CHAR_WIDTH * 9)) // Playing: [username]
+#define USERNAME_Y 1
+
+#define PHONE_STATE_X (SSD1325_LCDWIDTH - (8 + (CHAR_WIDTH * 7))) // Phone: [check/x icon]
+#define PHONE_STATE_Y 1
+
+#define SCORE_HEADER_X PHONE_STATE_X
+#define SCORE_HEADER_Y (PIECE_REGION_Y - 1)
+
+#define SCORE_X PHONE_STATE_X
+#define SCORE_Y (SCORE_HEADER_Y - LINE_HEIGHT)
+
+#define EXTRA_INFO_X 1
+#define EXTRA_INFO_Y (PIECE_REGION_Y - 1)
+
+/*****************************/
 
 const static uint8_t initial_ui_bits[] = {
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -236,11 +267,11 @@ const static unsigned char blank_bitmap_bits[] = {
    0xff, 0xff, 0xff, 0x07, 0xff, 0xff, 0xff, 0x07, 0xff, 0xff, 0xff, 0x07,
    0xff, 0xff, 0xff, 0x07, 0xff, 0xff, 0xff, 0x07 };
 
-
-
 void drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
 void clearArea(int x, int y, int width, int height);
 int drawString(char * string, int x, int y);
+void drawUsername(char * username);
+void drawScore(void);
 void drawPiece(int id);
 void drawPawn(void);
 void drawBishop(void);

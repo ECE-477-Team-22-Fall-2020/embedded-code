@@ -66,3 +66,14 @@ char rowMap(int row) {
 
     return 0x00;
 }
+
+int teamY(int y, int team) {
+	return team == WHITE_TEAM ? y : 7 - y;
+}
+
+void resetScoreString(void) {
+	scoreString[0] = '0';
+	scoreString[1] = '0';
+	scoreString[3] = '0';
+	scoreString[4] = '0';
+}
