@@ -10,7 +10,9 @@
 
 #include "oled_driver.h"
 
+#include "board.h"
 #include "gfxfont.h"
+#include "glcdfont.c"
 #include "stm32f4xx.h"
 #include "stm32f411e_discovery.h"
 #include "utility.h"
@@ -23,6 +25,7 @@
 #define LINE_HEIGHT 10
 
 /**SCREEN REGION DEFINITIONS**/
+
 #define PIECE_REGION_X 48
 #define PIECE_REGION_Y 14
 #define PIECE_REGION_W 27
@@ -43,10 +46,15 @@
 #define SCORE_X PHONE_STATE_X
 #define SCORE_Y (SCORE_HEADER_Y - LINE_HEIGHT)
 
+// may eventually want to put an elapsed time after this section
 #define EXTRA_INFO_X 1
 #define EXTRA_INFO_Y (PIECE_REGION_Y - 1)
+#define EXTRA_INFO_W (PIECE_REGION_X - EXTRA_INFO_X)
+#define EXTRA_INFO_H (SSD1325_LCDHEIGHT - EXTRA_INFO_Y - 5)
 
 /*****************************/
+
+enum directions {n, s, e, w, nw, ne, sw, se, nullDirection};
 
 const static uint8_t initial_ui_bits[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -266,6 +274,10 @@ const static unsigned char blank_bitmap_bits[] = {
    0xff, 0xff, 0xff, 0x07, 0xff, 0xff, 0xff, 0x07, 0xff, 0xff, 0xff, 0x07,
    0xff, 0xff, 0xff, 0x07, 0xff, 0xff, 0xff, 0x07 };
 
+void setupUI(void);
+void clearExtraInfo(void);
+void getPossibleMoves(int piece, int row, int col);
+void drawPossibleMoves(struct Space spaces[], int num_spaces);
 void drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
 void clearArea(int x, int y, int width, int height);
 int drawString(char * string, int x, int y);

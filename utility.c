@@ -11,6 +11,64 @@ void delay(int ms) {
 	}
 }
 
+int checkAvailable(int row, int col, int team) {
+	if (row < 0 || row > 7 || col < 0 || col > 7) return 0;
+
+	// TODO: check the game board to see if there is a friendly piece in the desired space
+
+	return 1;
+}
+
+// returns true if at least one element is truthy
+int some(int list[], int length) {
+	for (int i = 0; i < length; i++) {
+		if (length[i]) return 1;
+	}
+
+	return 0;
+}
+
+// don't need to do fancy adding for anything other than pawns and knights, since they are all symmetrical; might consider changing to prioritize certain directions appearing first
+void getCoords(int * newRow, int * newCol, int row, int col, int dist, int direction) {
+	switch(direction) {
+	case n: {
+		*newRow = row + dist;
+		*newCol = col;
+		break;
+	}
+	case s: {
+		*newRow = row - dist;
+		*newCol = col;
+		break;
+	}
+	case e: {
+		*newRow = row;
+		*newCol = col + dist;
+		break;
+	}
+	case w: {
+		*newRow = row;
+		*newCol = col - dist;
+		break;
+	} case nw: {
+		*newRow = row + dist;
+		*newCol = col - dist;
+		break;
+	} case ne: {
+		*newRow = row + dist;
+		*newCol = col + dist;
+		break;
+	} case sw: {
+		*newRow = row - dist;
+		*newCol = col - dist;
+		break;
+	} case se: {
+		*newRow = row - dist;
+		*newCol = col + dist;
+		break;
+	}
+}
+
 char * string_map(int id) {
     switch(id) {
     case PAWN_ID: return pawn_string;

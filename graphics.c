@@ -1,6 +1,4 @@
-#include <stdlib.h>
 #include "graphics.h"
-#include "glcdfont.c"
 
 #ifndef _swap_int16_t
 #define _swap_int16_t(a, b)                                                    \
@@ -33,6 +31,129 @@ void setupUI() {
     drawString("C4", EXTRA_INFO_X, EXTRA_INFO_Y - (2 * LINE_HEIGHT));
 
     drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
+}
+
+void clearExtraInfo(void) {
+	clearArea(EXTRA_INFO_X, EXTRA_INFO_Y, EXTRA_INFO_W, EXTRA_INFO_H);
+}
+
+int getSpaces(struct Space spaces[], int row, int col, int maxDist, int directions[], int numDirections) {
+	int numSpaces = 0;
+	int currentDist = 1;
+	int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
+	int currentDirection;
+
+
+	while (currentDist <= maxDist && some(directions, numDirections)) {
+		int newRow;
+		int newCol;
+
+		for (int i = 0; i < numDirections; i++) {
+			currentDirection = directions[i];
+			if (currentDirection == nullDirection) continue;
+			getCoords(&newRow, &newCol, row, col, currentDist, currentDirection);
+			if (checkAvailable(newRow, newCol, currentTeam)) {
+				spaces[numSpaces].x = newCol;
+				spaces[numSpaces].y = newRow;
+				numSpaces++;
+				if (numSpaces == 6) break;
+			} else {
+				directions[i] = nullDirection;
+			}
+		}
+		currentDist++;
+	}
+
+	return numSpaces;
+}
+
+void drawPossibleMoves(int piece, int row, int col) {
+	clearExtraInfo();
+
+	drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
+
+	struct Space spaces[6] = {0};
+	int numSpaces = 0;
+	struct Space currentSpace;
+	currentSpace = spaces[0];
+	int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
+
+	switch(piece) {
+	case PAWN_ID: {
+		if (teamY(row, currentTeam) == 1) {
+			if (checkAvailable(addRow(row, 2, currentTeam), col, currentTeam)) {
+				spaces[numSpaces].x = col;
+				spaces[numSpaces].y = addRow(row, 2, currentTeam);
+				numSpaces++;
+			}
+		}
+		if (checkAvailable(addRow(row, 1, currentTeam), col, currentTeam)) {
+			spaces[numSpaces].x = col;
+			spaces[numSpaces].y = addRow(row, 1, currentTeam);
+			numSpaces++;
+		}
+		break;
+	}
+	case BISHOP_ID: {
+		getSpaces(spaces, row, col, 7, (char[]) {nw, ne, sw, se}, 4);
+		break;
+	}
+	case KNIGHT_ID: {
+		// TODO: Knight logic
+
+		break;
+	}
+	case ROOK_ID: {
+		getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w}, 4);
+
+		break;
+	}
+	case QUEEN_ID: {
+		getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
+		break;
+	}
+	case KING_ID: {
+		getSpaces(spaces, row, col, 1, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
+		break;
+	}
+	}
+
+	printPossibleMoves(spaces, numSpaces);
+}
+
+int addRow(int row, int b, int team) {
+	if (team == WHITE_TEAM) return row + b;
+	else return row - b;
+}
+
+void printPossibleMoves(struct Space spaces[], int num_spaces) {
+	struct Space currentSpace;
+    char displayString[] = "__,";
+    int currentX = EXTRA_INFO_X;
+    int currentY = EXTRA_INFO_Y + LINE_HEIGHT;
+    int count = 0;
+
+    for (int currentIndex = 0; currentIndex < num_spaces; currentIndex++) {
+    	currentSpace = pieces[currentIndex];
+        displayString[0] = colMap(currentSpace.y);
+        displayString[1] = rowMap(currentSpace.x);
+        currentX += CHAR_WIDTH * drawString(displayString, currentX, currentY);
+        count++;
+
+        // draw three possible moves per line
+        if (count % 3 == 0) {
+            currentX = EXTRA_INFO_X;
+            currentY += LINE_HEIGHT;
+        }
+    }
+
+    // remove final comma
+    if (count == 0) return;
+    else if (currentX != EXTRA_INFO_X) {
+        clearArea(currentX - CHAR_WIDTH, currentY, CHAR_WIDTH, LINE_HEIGHT);
+    } else {
+        clearArea(EXTRA_INFO_X + (11 * CHAR_WIDTH), currentY - LINE_HEIGHT, CHAR_WIDTH, LINE_HEIGHT);
+    }
 }
 
 

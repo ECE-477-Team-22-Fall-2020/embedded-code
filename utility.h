@@ -30,6 +30,9 @@ char * king_string = "King";
 char scoreString[] = "00-00";
 
 void delay(int ms);
+int checkAvailable(int row, int col, int team);
+int some(int list[], int length);
+void getCoords(int * newRow, int * newCol, int row, int col, int dist, int direction);
 char * string_map(int id);
 int scoreMap(int id);
 char colMap(int row);
