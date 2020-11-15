@@ -88,6 +88,7 @@ void init_Board_Pawn_Test(void){
             board[x][y] = blank_space;
         }
     }
+    self_team = 1;
     struct Piece newPawn;
     newPawn.type = PAWN;
     newPawn.team = 1;
@@ -286,6 +287,31 @@ int check_for_pickup(void){
     }
     GPIOB->ODR = 0;
     return -1;
+}
+
+void timer_enable(void){
+    RCC->APB1ENR |= 0x8;
+    TIM5->CR1 &= ~0x10;
+    TIM5->ARR = 4999;
+    TIM5->PSC = 1599;
+    TIM5->DIER |= 0x1;
+
+    TIM5->CR1 |= 0x1;
+    NVIC->ISER[1] = 1<<(TIM5_IRQn - 32);
+}
+
+void TIM5_IRQHandler(void){
+    int active_piece = check_for_pickup();
+//    if(active_piece != -1){
+//        //Do Something related to the screen
+//        drawPiece(active_piece - 1);
+//        display();
+//    }else{
+//        clearPiece(-1);
+//    }
+    drawPiece(active_piece - 1);
+    display();
+    TIM5->SR &= ~0x1;
 }
 
 void update_board(void){

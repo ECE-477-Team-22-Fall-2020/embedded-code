@@ -13,7 +13,7 @@
 #include "stm32f411e_discovery.h"
 #include "oled_driver.h"
 #include "utility.h"
-#include "graphics.h"
+//#include "graphics.h"
 #include "board.h"
 
 #define PAWN_ID 0
@@ -237,11 +237,12 @@ void printPieces() {
 int main(void)
 {
     begin();
-
-    for (int i = 0; i < NUM_PIECES; i++) {
-        pieces[i].next = NULL_PIECE;
-    }
-
+    //timer_enable();
+    Pos_select_enable();
+    ADC_enable();
+    Button_enable();
+    init_Board_Pawn_Test();
+    update_board();
     // set screen all black as a background
     int color = BLACK;
     for (int x = 0; x < SSD1325_LCDWIDTH; x++) {
@@ -249,28 +250,38 @@ int main(void)
             drawPixel(x, y, color);
         }
     }
+    timer_enable();
+    drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
+    while(1){
+        ;
+    }
+    //for (int i = 0; i < NUM_PIECES; i++) {
+    //    pieces[i].next = NULL_PIECE;
+    //}
+
+
 
     display();
 
-    addPiece(getPiece(2, 4, PAWN_ID));
-    addPiece(getPiece(2, 2, PAWN_ID));
-    addPiece(getPiece(1, 1, ROOK_ID));
-    addPiece(getPiece(2, 2, PAWN_ID)); // will not get added
-    addPiece(getPiece(6, 2, PAWN_ID));
-    addPiece(getPiece(6, 4, PAWN_ID));
+    //addPiece(getPiece(2, 4, PAWN_ID));
+    //addPiece(getPiece(2, 2, PAWN_ID));
+    //addPiece(getPiece(1, 1, ROOK_ID));
+    //addPiece(getPiece(2, 2, PAWN_ID)); // will not get added
+    //addPiece(getPiece(6, 2, PAWN_ID));
+    //addPiece(getPiece(6, 4, PAWN_ID));
 //  addPiece(getPiece(8, 1, ROOK_ID));
 
-    printPieces();
-    display();
+    //printPieces();
+    //display();
 
-    while (1) {
-        removePiece(getPiece(6, 4, PAWN_ID));
-        printPieces();
-        display();
-        addPiece(getPiece(6, 4, PAWN_ID));
-        printPieces();
-        display();
-    }
+    //while (1) {
+    //    removePiece(getPiece(6, 4, PAWN_ID));
+    //    printPieces();
+    //    display();
+    //    addPiece(getPiece(6, 4, PAWN_ID));
+    //    printPieces();
+    //    display();
+    //}
 
 //  int i = 0;
 //  int width;

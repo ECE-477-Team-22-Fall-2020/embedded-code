@@ -10,6 +10,7 @@
 
 #include "stm32f4xx.h"
 #include "stm32f411e_discovery.h"
+#include "graphics.h"
 
 #define MAX_X  8
 #define MAX_Y  8
@@ -52,6 +53,12 @@ void castling(int changed[]);
 
 void en_passant(int changed[]);
 // Translates board movement in en passant movement in the board matrix
+
+void timer_enable(void);
+// Enables the timer for use with drawing screens
+
+void TIM5_IRQHandler(void);
+// Handles redrawing of the Active Piece
 
 void update_position(void);
 // Uses the "teams" matrix to update the positions of the virtual board to match
