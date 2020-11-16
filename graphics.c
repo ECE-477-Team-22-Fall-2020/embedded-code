@@ -37,7 +37,7 @@ void clearExtraInfo(void) {
 	clearArea(EXTRA_INFO_X, EXTRA_INFO_Y, EXTRA_INFO_W, EXTRA_INFO_H);
 }
 
-int getSpaces(struct Space spaces[], int row, int col, int maxDist, int directions[], int numDirections) {
+int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directions[], int numDirections) {
 	int numSpaces = 0;
 	int currentDist = 1;
 	int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
@@ -74,8 +74,6 @@ void drawPossibleMoves(int piece, int row, int col) {
 
 	struct Space spaces[6] = {0};
 	int numSpaces = 0;
-	struct Space currentSpace;
-	currentSpace = spaces[0];
 	int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
 
 	switch(piece) {
@@ -121,12 +119,12 @@ void drawPossibleMoves(int piece, int row, int col) {
 	printPossibleMoves(spaces, numSpaces);
 }
 
-int addRow(int row, int b, int team) {
+char addRow(int row, int b, int team) {
 	if (team == WHITE_TEAM) return row + b;
 	else return row - b;
 }
 
-void printPossibleMoves(struct Space spaces[], int num_spaces) {
+void printPossibleMoves(struct Space * spaces, int num_spaces) {
 	struct Space currentSpace;
     char displayString[] = "__,";
     int currentX = EXTRA_INFO_X;
@@ -134,7 +132,7 @@ void printPossibleMoves(struct Space spaces[], int num_spaces) {
     int count = 0;
 
     for (int currentIndex = 0; currentIndex < num_spaces; currentIndex++) {
-    	currentSpace = pieces[currentIndex];
+    	currentSpace = spaces[currentIndex];
         displayString[0] = colMap(currentSpace.y);
         displayString[1] = rowMap(currentSpace.x);
         currentX += CHAR_WIDTH * drawString(displayString, currentX, currentY);

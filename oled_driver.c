@@ -381,11 +381,6 @@ void display(void) {
 #endif
 }
 
-// clear everything
-void clearDisplay(void) {
-  memset(buffer, 0, (SSD1325_LCDWIDTH * SSD1325_LCDHEIGHT / 8));
-}
-
 // was in spixfer
 //#if defined(AVR)
 //    *clkport &= ~clkpinmask;

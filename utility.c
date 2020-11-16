@@ -20,9 +20,9 @@ int checkAvailable(int row, int col, int team) {
 }
 
 // returns true if at least one element is truthy
-int some(int list[], int length) {
+int some(char list[], int length) {
 	for (int i = 0; i < length; i++) {
-		if (length[i]) return 1;
+		if (list[i]) return 1;
 	}
 
 	return 0;
@@ -125,13 +125,13 @@ char rowMap(int row) {
     return 0x00;
 }
 
-int teamY(int y, int team) {
-	return team == WHITE_TEAM ? y : 7 - y;
-}
+//int teamY(int y, int team) {
+//	return (team == WHITE_TEAM) ? y : 7 - y;
+//}
 
-void resetScoreString(void) {
-	scoreString[0] = '0';
-	scoreString[1] = '0';
-	scoreString[3] = '0';
-	scoreString[4] = '0';
-}
+//void resetScoreString() {
+//	scoreString[0] = '0';
+//	scoreString[1] = '0';
+//	scoreString[3] = '0';
+//	scoreString[4] = '0';
+//}
