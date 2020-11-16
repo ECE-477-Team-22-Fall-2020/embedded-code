@@ -21,12 +21,16 @@ int main(void)
     Pos_select_enable();
     ADC_enable();
     Button_enable();
-    init_Board_Pawn_Test();
+    //init_Board_Pawn_Test();
+    //init_Board_White_Bottom();
     update_board();
-    timer_enable();
     setupUI();
+    display();
+    //timer_enable();
     drawPossibleMoves(KING_ID, 1, 1);
-
+    //init_Board_Pawn_Test();
+    init_Board_White_Bottom();
+    timer_enable();
     while(1){
         ;
     }
