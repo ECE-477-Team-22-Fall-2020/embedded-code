@@ -25,6 +25,7 @@ int main(void)
     update_board();
     timer_enable();
     setupUI();
+    drawPossibleMoves(KING_ID, 1, 1);
 
     while(1){
         ;

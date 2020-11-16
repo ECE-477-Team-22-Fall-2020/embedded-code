@@ -26,9 +26,9 @@ void setupUI() {
     drawScore();
 
     // TODO: Make the following section draw the right info (enemy versus your potential moves). currently static
-    drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
-    drawString("C3", EXTRA_INFO_X, EXTRA_INFO_Y - LINE_HEIGHT);
-    drawString("C4", EXTRA_INFO_X, EXTRA_INFO_Y - (2 * LINE_HEIGHT));
+//    drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
+//    drawString("C3", EXTRA_INFO_X, EXTRA_INFO_Y + LINE_HEIGHT);
+//    drawString("C4", EXTRA_INFO_X, EXTRA_INFO_Y + (2 * LINE_HEIGHT));
 
     drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
 }
@@ -56,7 +56,7 @@ int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directi
 				spaces[numSpaces].x = newCol;
 				spaces[numSpaces].y = newRow;
 				numSpaces++;
-				if (numSpaces == 6) break;
+				if (numSpaces == 4) break;
 			} else {
 				directions[i] = nullDirection;
 			}
@@ -72,7 +72,7 @@ void drawPossibleMoves(int piece, int row, int col) {
 
 	drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
 
-	struct Space spaces[6] = {0};
+	struct Space spaces[4] = {0};
 	int numSpaces = 0;
 	int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
 
@@ -93,7 +93,7 @@ void drawPossibleMoves(int piece, int row, int col) {
 		break;
 	}
 	case BISHOP_ID: {
-		getSpaces(spaces, row, col, 7, (char[]) {nw, ne, sw, se}, 4);
+		numSpaces = getSpaces(spaces, row, col, 7, (char[]) {nw, ne, sw, se}, 4);
 		break;
 	}
 	case KNIGHT_ID: {
@@ -102,16 +102,16 @@ void drawPossibleMoves(int piece, int row, int col) {
 		break;
 	}
 	case ROOK_ID: {
-		getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w}, 4);
+		numSpaces = getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w}, 4);
 
 		break;
 	}
 	case QUEEN_ID: {
-		getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
+		numSpaces = getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
 		break;
 	}
 	case KING_ID: {
-		getSpaces(spaces, row, col, 1, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
+		numSpaces = getSpaces(spaces, row, col, 1, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
 		break;
 	}
 	}
@@ -139,7 +139,7 @@ void printPossibleMoves(struct Space * spaces, int num_spaces) {
         count++;
 
         // draw three possible moves per line
-        if (count % 3 == 0) {
+        if (count % 2 == 0) {
             currentX = EXTRA_INFO_X;
             currentY += LINE_HEIGHT;
         }
@@ -150,7 +150,7 @@ void printPossibleMoves(struct Space * spaces, int num_spaces) {
     else if (currentX != EXTRA_INFO_X) {
         clearArea(currentX - CHAR_WIDTH, currentY, CHAR_WIDTH, LINE_HEIGHT);
     } else {
-        clearArea(EXTRA_INFO_X + (11 * CHAR_WIDTH), currentY - LINE_HEIGHT, CHAR_WIDTH, LINE_HEIGHT);
+        clearArea(EXTRA_INFO_X + (7 * CHAR_WIDTH), currentY - LINE_HEIGHT, CHAR_WIDTH, LINE_HEIGHT);
     }
 }
 
@@ -183,7 +183,7 @@ int drawString(char * string, int x, int y) {
 	char current_char = string[0];
 	int i = 1;
 	while (current_char != 0) {
-		drawChar(x + (6 * i), y, current_char, WHITE, WHITE, 1, 1);
+		drawChar(x + (CHAR_WIDTH * i), y, current_char, WHITE, WHITE, 1, 1);
 		current_char = string[i++];
 	}
 

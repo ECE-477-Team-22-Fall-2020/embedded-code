@@ -9,7 +9,7 @@ char * king_string = "King";
 
 char scoreString[] = "00-00";
 
-// doesn't actually wait one ms lol
+// doesn't actually wait one ms
 void delay(int ms) {
 	int i;
 	int j = 0;

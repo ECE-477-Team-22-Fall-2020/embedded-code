@@ -26,30 +26,30 @@
 
 /**SCREEN REGION DEFINITIONS**/
 
-#define PIECE_REGION_X 48
+#define PIECE_REGION_X 50
 #define PIECE_REGION_Y 14
 #define PIECE_REGION_W 27
 #define PIECE_REGION_H 47
 
-#define PLAYER_X 1
-#define PLAYER_Y 1
+#define PLAYER_X 0
+#define PLAYER_Y 0
 
 #define USERNAME_X (PLAYER_X + (CHAR_WIDTH * 9)) // Playing: [username]
-#define USERNAME_Y 1
+#define USERNAME_Y 0
 
-#define PHONE_STATE_X (SSD1325_LCDWIDTH - (8 + (CHAR_WIDTH * 7))) // Phone: [check/x icon]
-#define PHONE_STATE_Y 1
+#define PHONE_STATE_X (SSD1325_LCDWIDTH - (10 + (CHAR_WIDTH * 7))) // Phone: [check/x icon]
+#define PHONE_STATE_Y 0
 
-#define SCORE_HEADER_X PHONE_STATE_X
+#define SCORE_HEADER_X (PIECE_REGION_X + PIECE_REGION_W + 3)
 #define SCORE_HEADER_Y (PIECE_REGION_Y - 1)
 
-#define SCORE_X PHONE_STATE_X
-#define SCORE_Y (SCORE_HEADER_Y - LINE_HEIGHT)
+#define SCORE_X SCORE_HEADER_X
+#define SCORE_Y (SCORE_HEADER_Y + LINE_HEIGHT)
 
 // may eventually want to put an elapsed time after this section
 #define EXTRA_INFO_X 1
 #define EXTRA_INFO_Y (PIECE_REGION_Y - 1)
-#define EXTRA_INFO_W (PIECE_REGION_X - EXTRA_INFO_X)
+#define EXTRA_INFO_W (PIECE_REGION_X - EXTRA_INFO_X - 4)
 #define EXTRA_INFO_H (SSD1325_LCDHEIGHT - EXTRA_INFO_Y - 5)
 
 /*****************************/
