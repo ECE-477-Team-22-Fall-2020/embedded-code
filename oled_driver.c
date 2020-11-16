@@ -30,7 +30,6 @@
 //
 
 #include "oled_driver.h"
-#include "utility.h"
 
 // the memory buffer for the LCD
 

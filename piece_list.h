@@ -14,7 +14,7 @@
 #define LAST_PIECE -1
 #define NULL_PIECE -2
 
-// need to rename eventually to not confilct with Matt's struct
+// need to rename eventually to not conflict with Matt's struct
 typedef struct PieceType {
 	int row; // zero-indexed
 	int col; // zero-indexed

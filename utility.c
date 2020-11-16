@@ -1,5 +1,14 @@
 #include "utility.h"
 
+char * pawn_string = "Pawn";
+char * bishop_string = "Bishop";
+char * knight_string = "Knight";
+char * rook_string = "Rook";
+char * queen_string = "Queen";
+char * king_string = "King";
+
+char scoreString[] = "00-00";
+
 // doesn't actually wait one ms lol
 void delay(int ms) {
 	int i;
@@ -67,9 +76,10 @@ void getCoords(int * newRow, int * newCol, int row, int col, int dist, int direc
 		*newCol = col + dist;
 		break;
 	}
+	}
 }
 
-char * string_map(int id) {
+char * stringMap(int id) {
     switch(id) {
     case PAWN_ID: return pawn_string;
     case BISHOP_ID: return bishop_string;
@@ -125,13 +135,13 @@ char rowMap(int row) {
     return 0x00;
 }
 
-//int teamY(int y, int team) {
-//	return (team == WHITE_TEAM) ? y : 7 - y;
-//}
+int teamY(int y, int team) {
+	return (team == WHITE_TEAM) ? y : 7 - y;
+}
 
-//void resetScoreString() {
-//	scoreString[0] = '0';
-//	scoreString[1] = '0';
-//	scoreString[3] = '0';
-//	scoreString[4] = '0';
-//}
+void resetScoreString() {
+	scoreString[0] = '0';
+	scoreString[1] = '0';
+	scoreString[3] = '0';
+	scoreString[4] = '0';
+}

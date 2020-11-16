@@ -7,7 +7,7 @@
 
 #include "stm32f411e_discovery.h"
 #include "stm32f4xx.h"
-
+#include "utility.h"
 
 #ifndef adagfx_swap
 #define adagfx_swap(a, b)                                                      \
