@@ -276,6 +276,7 @@ int check_for_pickup(void){
             current_team = ADC_val();
             if(current_team == 0 && teams[x][y] == self_team){
                 GPIOB->ODR = 0;
+                //drawPossibleMoves(board[x][y].type, x, y, self_team);
                 return board[x][y].type;
             }
             pos_code++;
@@ -310,6 +311,7 @@ void TIM5_IRQHandler(void){
 //        clearPiece(-1);
 //    }
     drawPiece(active_piece - 1);
+    //drawPossibleMoves(KING_ID, 1, 1, self_team);
     display();
     TIM5->SR &= ~0x1;
 }

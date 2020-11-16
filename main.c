@@ -27,7 +27,7 @@ int main(void)
     setupUI();
     display();
     //timer_enable();
-    drawPossibleMoves(KING_ID, 1, 1);
+    //drawPossibleMoves(KING_ID, 1, 1);
     //init_Board_Pawn_Test();
     init_Board_White_Bottom();
     timer_enable();

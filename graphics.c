@@ -67,14 +67,14 @@ int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directi
 	return numSpaces;
 }
 
-void drawPossibleMoves(int piece, int row, int col) {
+void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 	clearExtraInfo();
 
 	drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
 
 	struct Space spaces[4] = {0};
 	int numSpaces = 0;
-	int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
+	//int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
 
 	switch(piece) {
 	case PAWN_ID: {
@@ -98,7 +98,30 @@ void drawPossibleMoves(int piece, int row, int col) {
 	}
 	case KNIGHT_ID: {
 		// TODO: Knight logic
-
+	    int twos[] = {-2, 2};
+	    int ones[] = {-1, 1};
+	    for(int x = 0; x < 2; x++){
+	        for(int y = 0; y < 2; y++){
+	            if((col + twos[x]) <= 7 && (col + twos[x]) >= 0){
+	                if((row + ones[y]) <= 7 && (row + ones[y]) >= 0){
+	                    spaces[numSpaces].x = col + twos[x];
+	                    spaces[numSpaces].y = row + ones[y];
+	                    numSpaces++;
+	                }
+	            }
+	        }
+	    }
+	    for(int x = 0; x < 2; x++){
+	        for(int y = 0; y < 2; y++){
+	            if((row + twos[x]) <= 7 && (row + twos[x]) >= 0){
+	                if((col + ones[y]) <= 7 && (col + ones[y]) >= 0){
+	                    spaces[numSpaces].x = col + ones[y];
+	                    spaces[numSpaces].y = row + twos[x];
+	                    numSpaces++;
+	                }
+	            }
+	        }
+	    }
 		break;
 	}
 	case ROOK_ID: {
