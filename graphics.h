@@ -52,6 +52,8 @@
 #define EXTRA_INFO_W (PIECE_REGION_X - EXTRA_INFO_X - 4)
 #define EXTRA_INFO_H (SSD1325_LCDHEIGHT - EXTRA_INFO_Y - 5)
 
+#define NUM_SHOWN_SPACES 4
+
 /*****************************/
 
 const static uint8_t initial_ui_bits[] = {
