@@ -97,7 +97,6 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 		break;
 	}
 	case KNIGHT_ID: {
-		// TODO: Knight logic
 	    int twos[] = {-2, 2};
 	    int ones[] = {-1, 1};
 	    for(int x = 0; x < 2; x++){
@@ -109,8 +108,14 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 	                    numSpaces++;
 	                }
 	            }
+
+	            if (numSpaces >= 4) {
+	            	x = 3;
+	            	break;
+	            }
 	        }
 	    }
+
 	    for(int x = 0; x < 2; x++){
 	        for(int y = 0; y < 2; y++){
 	            if((row + twos[x]) <= 7 && (row + twos[x]) >= 0){
@@ -120,6 +125,11 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 	                    numSpaces++;
 	                }
 	            }
+
+	            if (numSpaces >= 4) {
+					x = 3;
+					break;
+				}
 	        }
 	    }
 		break;
