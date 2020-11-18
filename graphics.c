@@ -56,7 +56,7 @@ int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directi
 				spaces[numSpaces].x = newCol;
 				spaces[numSpaces].y = newRow;
 				numSpaces++;
-				if (numSpaces == 4) break;
+				if (numSpaces == NUM_SHOWN_SPACES) break;
 			} else {
 				directions[i] = nullDirection;
 			}
@@ -72,9 +72,8 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 
 	drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
 
-	struct Space spaces[4] = {0};
+	struct Space spaces[NUM_SHOWN_SPACES] = {0};
 	int numSpaces = 0;
-	//int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
 
 	switch(piece) {
 	case PAWN_ID: {
@@ -109,7 +108,7 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 	                }
 	            }
 
-	            if (numSpaces >= 4) {
+	            if (numSpaces >= NUM_SHOWN_SPACES) {
 	            	x = 3;
 	            	break;
 	            }
@@ -126,7 +125,7 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 	                }
 	            }
 
-	            if (numSpaces >= 4) {
+	            if (numSpaces >= NUM_SHOWN_SPACES) {
 					x = 3;
 					break;
 				}
@@ -157,14 +156,19 @@ char addRow(int row, int b, int team) {
 	else return row - b;
 }
 
-void printPossibleMoves(struct Space * spaces, int num_spaces) {
+void printPossibleMoves(struct Space * spaces, int numSpaces) {
 	struct Space currentSpace;
     char displayString[] = "__,";
     int currentX = EXTRA_INFO_X;
     int currentY = EXTRA_INFO_Y + LINE_HEIGHT;
     int count = 0;
 
-    for (int currentIndex = 0; currentIndex < num_spaces; currentIndex++) {
+    if (numSpaces > NUM_SHOWN_SPACES) {
+    	char dumb[] = "DUMB, AS EXPECTED";
+    	numSpaces = NUM_SHOWN_SPACES;
+    }
+
+    for (int currentIndex = 0; currentIndex < numSpaces; currentIndex++) {
     	currentSpace = spaces[currentIndex];
         displayString[0] = colMap(currentSpace.y);
         displayString[1] = rowMap(currentSpace.x);
