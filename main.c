@@ -21,6 +21,9 @@ int main(void)
     Pos_select_enable();
     ADC_enable();
     Button_enable();
+    //while(1){
+    //    update_board();
+    //}
     //init_Board_Pawn_Test();
     //init_Board_White_Bottom();
     update_board();

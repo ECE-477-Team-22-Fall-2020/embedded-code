@@ -30,6 +30,11 @@ struct Space translate(struct Space current){
 }
 
 void init_Board_White_Bottom(void){
+    for( int x = 0; x < MAX_X; x++){
+        for( int y = 0; y < MAX_Y; y++){
+            board[x][y] = blank_space;
+        }
+    }
     self_team = 1;
     struct Piece newPawn;
     newPawn.type = PAWN;
@@ -47,8 +52,8 @@ void init_Board_White_Bottom(void){
     for(x=0; x < MAX_X; x++){
         newPawn.team = 1;
         board[x][1] = newPawn;
-        newPawn.team = 2;
-        board[x][6] = newPawn;
+//        newPawn.team = 2;
+//        board[x][6] = newPawn;
     }
     //Black Pieces
     newBishop.team = 1;
@@ -66,19 +71,19 @@ void init_Board_White_Bottom(void){
     board[4][0] = newKing;
 
     //White Pieces
-    newBishop.team = 2;
-    board[2][7] = newBishop;
-    board[5][7] = newBishop;
-    newKnight.team = 2;
-    board[1][7] = newKnight;
-    board[6][7] = newKnight;
-    newRook.team = 2;
-    board[0][7] = newRook;
-    board[7][7] = newRook;
-    newQueen.team = 2;
-    board[3][7] = newQueen;
-    newKing.team = 2;
-    board[4][7] = newKing;
+//    newBishop.team = 2;
+//    board[2][7] = newBishop;
+//    board[5][7] = newBishop;
+//    newKnight.team = 2;
+//    board[1][7] = newKnight;
+//    board[6][7] = newKnight;
+//    newRook.team = 2;
+//    board[0][7] = newRook;
+//    board[7][7] = newRook;
+//    newQueen.team = 2;
+//    board[3][7] = newQueen;
+//    newKing.team = 2;
+//    board[4][7] = newKing;
     return;
 }
 
@@ -214,8 +219,8 @@ void update_position(void){
 }
 
 void EXTI0_IRQHandler(void){
-    //update_board();
-    //update_position();
+    update_board();
+    update_position();
     EXTI->PR |= EXTI_PR_PR0;
     return;
 }
@@ -274,9 +279,9 @@ int check_for_pickup(void){
     for(x = 0; x < MAX_X; x++){
         for(y = 0; y < MAX_Y; y++){
             current_team = ADC_val();
-            if(current_team == 0 && teams[x][y] == self_team){
+            if(current_team == 0 && board[x][y].team == self_team){
                 GPIOB->ODR = 0;
-                //drawPossibleMoves(board[x][y].type, x, y, self_team);
+                drawPossibleMoves(board[x][y].type, x, y, self_team);
                 return board[x][y].type;
             }
             pos_code++;
@@ -310,6 +315,7 @@ void TIM5_IRQHandler(void){
 //    }else{
 //        clearPiece(-1);
 //    }
+    clearPiece();
     drawPiece(active_piece - 1);
     //drawPossibleMoves(KING_ID, 1, 1, self_team);
     display();
