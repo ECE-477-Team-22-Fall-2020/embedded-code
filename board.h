@@ -64,6 +64,11 @@ void update_position(void);
 // Uses the "teams" matrix to update the positions of the virtual board to match
 // the physical board. Calls castling() and en_passant() as needed
 
+void drawPossibleMoves(int piece, int row, int col, int currentTeam);
+
+int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directions[], int numDirections);
+
+
 void EXTI0_IRQHandler(void);
 // Sends moves when signaled by the external button
 

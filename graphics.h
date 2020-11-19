@@ -276,8 +276,6 @@ const static unsigned char blank_bitmap_bits[] = {
 
 void setupUI(void);
 void clearExtraInfo(void);
-int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directions[], int numDirections);
-void drawPossibleMoves(int piece, int row, int col, int currentTeam);
 char addRow(int row, int b, int team);
 void printPossibleMoves(struct Space * spaces, int num_spaces);
 void drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);

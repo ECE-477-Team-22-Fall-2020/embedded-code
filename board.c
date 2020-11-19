@@ -55,7 +55,7 @@ void init_Board_White_Bottom(void){
 //        newPawn.team = 2;
 //        board[x][6] = newPawn;
     }
-    //Black Pieces
+    //White Pieces
     newBishop.team = 1;
     board[2][0] = newBishop;
     board[5][0] = newBishop;
@@ -66,11 +66,11 @@ void init_Board_White_Bottom(void){
     board[0][0] = newRook;
     board[7][0] = newRook;
     newQueen.team = 1;
-    board[3][0] = newQueen;
+    board[4][0] = newQueen;
     newKing.team = 1;
-    board[4][0] = newKing;
+    board[3][0] = newKing;
 
-    //White Pieces
+    //Black Pieces
 //    newBishop.team = 2;
 //    board[2][7] = newBishop;
 //    board[5][7] = newBishop;
@@ -81,9 +81,9 @@ void init_Board_White_Bottom(void){
 //    board[0][7] = newRook;
 //    board[7][7] = newRook;
 //    newQueen.team = 2;
-//    board[3][7] = newQueen;
+//    board[4][7] = newQueen;
 //    newKing.team = 2;
-//    board[4][7] = newKing;
+//    board[3][7] = newKing;
     return;
 }
 
@@ -102,6 +102,11 @@ void init_Board_Pawn_Test(void){
 }
 
 void init_Board_Black_Bottom(void){
+    for( int x = 0; x < MAX_X; x++){
+        for( int y = 0; y < MAX_Y; y++){
+            board[x][y] = blank_space;
+        }
+    }
     self_team = 2;
     struct Piece newPawn;
     newPawn.type = PAWN;
@@ -122,7 +127,7 @@ void init_Board_Black_Bottom(void){
         newPawn.team = 1;
         board[x][6] = newPawn;
     }
-    //White Pieces
+    //Black Pieces
     newBishop.team = 2;
     board[2][0] = newBishop;
     board[5][0] = newBishop;
@@ -133,11 +138,11 @@ void init_Board_Black_Bottom(void){
     board[0][0] = newRook;
     board[7][0] = newRook;
     newQueen.team = 2;
-    board[4][0] = newQueen;
+    board[3][0] = newQueen;
     newKing.team = 2;
-    board[3][0] = newKing;
+    board[4][0] = newKing;
 
-    //Black Pieces
+    //White Pieces
     newBishop.team = 1;
     board[2][7] = newBishop;
     board[5][7] = newBishop;
@@ -148,9 +153,9 @@ void init_Board_Black_Bottom(void){
     board[0][7] = newRook;
     board[7][7] = newRook;
     newQueen.team = 1;
-    board[4][7] = newQueen;
+    board[3][7] = newQueen;
     newKing.team = 1;
-    board[3][7] = newKing;
+    board[4][7] = newKing;
     return;
 }
 
@@ -218,6 +223,120 @@ void update_position(void){
     return;
 }
 
+void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
+    clearExtraInfo();
+
+    drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
+
+    struct Space spaces[NUM_SHOWN_SPACES] = {0};
+    int numSpaces = 0;
+
+    switch(piece) {
+    case PAWN_ID: {
+        if (teamY(row, currentTeam) == 1) {
+            if (checkAvailable(addRow(row, 2, currentTeam), col, currentTeam)) {
+                spaces[numSpaces].x = col;
+                spaces[numSpaces].y = addRow(row, 2, currentTeam);
+                numSpaces++;
+            }
+        }
+        if (checkAvailable(addRow(row, 1, currentTeam), col, currentTeam)) {
+            spaces[numSpaces].x = col;
+            spaces[numSpaces].y = addRow(row, 1, currentTeam);
+            numSpaces++;
+        }
+        break;
+    }
+    case BISHOP_ID: {
+        numSpaces = getSpaces(spaces, row, col, 7, (char[]) {nw, ne, sw, se}, 4);
+        break;
+    }
+    case KNIGHT_ID: {
+        int twos[] = {-2, 2};
+        int ones[] = {-1, 1};
+        for(int x = 0; x < 2; x++){
+            for(int y = 0; y < 2; y++){
+                if((col + twos[x]) <= 7 && (col + twos[x]) >= 0){
+                    if((row + ones[y]) <= 7 && (row + ones[y]) >= 0){
+                        spaces[numSpaces].x = col + twos[x];
+                        spaces[numSpaces].y = row + ones[y];
+                        numSpaces++;
+                    }
+                }
+
+                if (numSpaces >= NUM_SHOWN_SPACES) {
+                    x = 3;
+                    break;
+                }
+            }
+        }
+
+        for(int x = 0; x < 2; x++){
+            for(int y = 0; y < 2; y++){
+                if((row + twos[x]) <= 7 && (row + twos[x]) >= 0){
+                    if((col + ones[y]) <= 7 && (col + ones[y]) >= 0){
+                        spaces[numSpaces].x = col + ones[y];
+                        spaces[numSpaces].y = row + twos[x];
+                        numSpaces++;
+                    }
+                }
+
+                if (numSpaces >= NUM_SHOWN_SPACES) {
+                    x = 3;
+                    break;
+                }
+            }
+        }
+        break;
+    }
+    case ROOK_ID: {
+        numSpaces = getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w}, 4);
+
+        break;
+    }
+    case QUEEN_ID: {
+        numSpaces = getSpaces(spaces, row, col, 7, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
+        break;
+    }
+    case KING_ID: {
+        numSpaces = getSpaces(spaces, row, col, 1, (char[]) {n, s, e, w, nw, ne, sw, se}, 8);
+        break;
+    }
+    }
+
+    printPossibleMoves(spaces, numSpaces);
+}
+
+int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directions[], int numDirections) {
+    int numSpaces = 0;
+    int currentDist = 1;
+    int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
+    int currentDirection;
+
+
+    while (currentDist <= maxDist && some(directions, numDirections)) {
+        int newRow;
+        int newCol;
+
+        for (int i = 0; i < numDirections; i++) {
+            currentDirection = directions[i];
+            if (currentDirection == nullDirection){ continue;}
+            getCoords(&newRow, &newCol, row, col, currentDist, currentDirection);
+            if (board[newCol][newRow].type == 0) {
+                spaces[numSpaces].x = newCol;
+                spaces[numSpaces].y = newRow;
+                numSpaces++;
+                if (numSpaces == NUM_SHOWN_SPACES) break;
+            } else {
+                directions[i] = nullDirection;
+            }
+        }
+        currentDist++;
+    }
+
+    return numSpaces;
+}
+
 void EXTI0_IRQHandler(void){
     update_board();
     update_position();
@@ -252,9 +371,11 @@ void ADC_enable(void){
 int ADC_val(void){
     int value;
     int team;
-    ADC1->CR2 |= ADC_CR2_SWSTART;
-    while(!(ADC1->SR & ADC_SR_EOC));
-    value = ADC1->DR;
+    do{
+        ADC1->CR2 |= ADC_CR2_SWSTART;
+        while(!(ADC1->SR & ADC_SR_EOC));
+        value = ADC1->DR;
+    }while(value >= 4094 || value < 2);
     //return value;
     if(value > 2000){
         //GPIOD->ODR ^= 0x1000;
@@ -281,7 +402,7 @@ int check_for_pickup(void){
             current_team = ADC_val();
             if(current_team == 0 && board[x][y].team == self_team){
                 GPIOB->ODR = 0;
-                drawPossibleMoves(board[x][y].type, x, y, self_team);
+                drawPossibleMoves(board[x][y].type - 1, y, x, self_team);
                 return board[x][y].type;
             }
             pos_code++;
