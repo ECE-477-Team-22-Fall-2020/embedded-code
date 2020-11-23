@@ -9,26 +9,24 @@
   }
 #endif
 
+char * versusString = "Vs:";
+char * phoneString = "Phone:";
+
 // sets up the basic background UI
 void setupUI() {
     clearArea(0, 0, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT);
 
     // will want to eventually initialize this to "No active match"; will need width and height of the region to reset to that
-    drawString("Playing: ", PLAYER_X, PLAYER_Y);
+    drawString(versusString, PLAYER_X, PLAYER_Y);
     drawUsername("ggargle");
 
-    drawString("Phone: ", PHONE_STATE_X, PHONE_STATE_Y);
-
-    // TODO: Make check mark and x mark graphics to be inserted here
+    drawString(phoneString, PHONE_STATE_X, PHONE_STATE_Y);
+    drawString("X", ICON_X, ICON_Y);
+//    drawXBitmap(ICON_X, ICON_Y, x_bitmap_bits, 9, 9, WHITE);
 
     drawString("Score:", SCORE_HEADER_X, SCORE_HEADER_Y);
     resetScoreString();
     drawScore();
-
-    // TODO: Make the following section draw the right info (enemy versus your potential moves). currently static
-//    drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
-//    drawString("C3", EXTRA_INFO_X, EXTRA_INFO_Y + LINE_HEIGHT);
-//    drawString("C4", EXTRA_INFO_X, EXTRA_INFO_Y + (2 * LINE_HEIGHT));
 
     drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
 }
@@ -39,6 +37,15 @@ void ledOn(void) {
 
 void ledOff(void) {
 	GPIOA->BSRR |= 1 << (led + 16);
+}
+
+void testLed(void) {
+	for (int i = 0; i < 10; i++) {
+		ledOn();
+		delay(100);
+		ledOff();
+		delay(100);
+	}
 }
 
 void clearExtraInfo(void) {
@@ -108,6 +115,15 @@ void clearArea(int x, int y, int width, int height) {
         }
     }
 }
+
+void fillArea(int x, int y, int width, int height) {
+    for (int i = x; i < x + width; i++) {
+        for (int j = y; j < y + height; j++) {
+            drawPixel(i, j, WHITE);
+        }
+    }
+}
+
 
 int drawString(char * string, int x, int y) {
 	if (string == NULL) return 0;

@@ -31,14 +31,20 @@
 #define PIECE_REGION_W 27
 #define PIECE_REGION_H 47
 
+char * versusString;
+char * phoneString;
+
 #define PLAYER_X 0
 #define PLAYER_Y 0
 
-#define USERNAME_X (PLAYER_X + (CHAR_WIDTH * 9)) // Playing: [username]
+#define USERNAME_X (PLAYER_X + (CHAR_WIDTH * STRLEN(versusString))) // vs: [username]
 #define USERNAME_Y 0
 
-#define PHONE_STATE_X (SSD1325_LCDWIDTH - (10 + (CHAR_WIDTH * 7))) // Phone: [check/x icon]
+#define PHONE_STATE_X (SSD1325_LCDWIDTH - (CHAR_WIDTH * (STRLEN(phoneString) + 4))) // Phone: [check/x icon]
 #define PHONE_STATE_Y 0
+
+#define ICON_X (SSD1325_LCDWIDTH - (CHAR_WIDTH *2))
+#define ICON_Y PHONE_STATE_Y
 
 #define SCORE_HEADER_X (PIECE_REGION_X + PIECE_REGION_W + 3)
 #define SCORE_HEADER_Y (PIECE_REGION_Y - 1)
@@ -287,11 +293,13 @@ const static unsigned char check_bitmap_bits[] = {
 void setupUI(void);
 void ledOn(void);
 void ledOff(void);
+void testLed(void);
 void clearExtraInfo(void);
 char addRow(int row, int b, int team);
 void printPossibleMoves(struct Space * spaces, int num_spaces);
 void drawXBitmap(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color);
 void clearArea(int x, int y, int width, int height);
+void fillArea(int x, int y, int width, int height);
 int drawString(char * string, int x, int y);
 void drawUsername(char * username);
 void drawScore(void);

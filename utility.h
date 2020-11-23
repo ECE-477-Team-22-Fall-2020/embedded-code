@@ -20,6 +20,8 @@
 #define QUEEN_ID 4
 #define KING_ID 5
 
+#define STRLEN(s) (sizeof(s)/sizeof(s[0]))
+
 char * pawn_string;
 char * bishop_string;
 char * knight_string;

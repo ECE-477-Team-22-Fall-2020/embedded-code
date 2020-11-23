@@ -128,22 +128,6 @@ void drawPixel(int16_t x, int16_t y, uint16_t color) {
   if ((x >= SSD1325_LCDWIDTH) || (y >= SSD1325_LCDHEIGHT) || (x < 0) || (y < 0))
     return;
 
-  // check rotation, move pixel around if necessary
-//  switch (getRotation()) {
-//  case 1:
-//    adagfx_swap(x, y);
-//    x = WIDTH - x - 1;
-//    break;
-//  case 2:
-//    x = WIDTH - x - 1;
-//    y = HEIGHT - y - 1;
-//    break;
-//  case 3:
-//    adagfx_swap(x, y);
-//    y = HEIGHT - y - 1;
-//    break;
-//  }
-
   // x is which column
   if (color == WHITE)
     buffer[x + (y / 8) * SSD1325_LCDWIDTH] |= _BV((y % 8));

@@ -379,6 +379,7 @@ int ADC_val(void){
 	value = ADC1->DR;
 	if(value > 4090){
 		value++;
+//		ledOn();
 	}
     //}while(value >= 4094 || value < 2);
     //return value;
