@@ -305,6 +305,7 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
     }
 
     printPossibleMoves(spaces, numSpaces);
+    numSpaces++;
 }
 
 int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directions[], int numDirections) {
@@ -371,11 +372,14 @@ void ADC_enable(void){
 int ADC_val(void){
     int value;
     int team;
-    do{
+    //do{
         ADC1->CR2 |= ADC_CR2_SWSTART;
         while(!(ADC1->SR & ADC_SR_EOC));
         value = ADC1->DR;
-    }while(value >= 4094 || value < 2);
+        //if(value > 4090){
+        //    value++;
+        //}
+    //}while(value >= 4094 || value < 2);
     //return value;
     if(value > 2000){
         //GPIOD->ODR ^= 0x1000;
