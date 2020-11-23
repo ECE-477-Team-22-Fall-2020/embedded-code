@@ -377,9 +377,9 @@ int ADC_val(void){
 	ADC1->CR2 |= ADC_CR2_SWSTART;
 	while(!(ADC1->SR & ADC_SR_EOC));
 	value = ADC1->DR;
-        //if(value > 4090){
-        //    value++;
-        //}
+	if(value > 4090){
+		value++;
+	}
     //}while(value >= 4094 || value < 2);
     //return value;
     if(value > 2000){
