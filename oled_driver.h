@@ -30,6 +30,7 @@
 #define rst 6
 #define sclk 5
 #define mosi 7
+#define led 0
 
 /*=========================================================================
     SSD1325 Displays

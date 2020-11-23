@@ -181,11 +181,13 @@ void begin(void) {
   GPIOA->MODER &= ~(0x3 << (2 * rst));
   GPIOA->MODER &= ~(0x3 << (2 * sclk));
   GPIOA->MODER &= ~(0x3 << (2 * mosi));
+  GPIOA->MODER &= ~(0x3 << (2 * led));
   GPIOA->MODER |= 0x1 << (2 * dc);
   GPIOA->MODER |= 0x1 << (2 * cs);
   GPIOA->MODER |= 0x1 << (2 * rst);
   GPIOA->MODER |= 0x1 << (2 * sclk);
   GPIOA->MODER |= 0x1 << (2 * mosi);
+  GPIOA->MODER |= 0x1 << (2 * led);
 
   // configure the push button
   GPIOA->MODER &= ~(0x3 << (2 * 0));

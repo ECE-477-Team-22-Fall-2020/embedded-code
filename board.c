@@ -341,6 +341,7 @@ int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directi
 void EXTI0_IRQHandler(void){
     update_board();
     update_position();
+    ledOff();
     EXTI->PR |= EXTI_PR_PR0;
     return;
 }
@@ -373,9 +374,9 @@ int ADC_val(void){
     int value;
     int team;
     //do{
-        ADC1->CR2 |= ADC_CR2_SWSTART;
-        while(!(ADC1->SR & ADC_SR_EOC));
-        value = ADC1->DR;
+	ADC1->CR2 |= ADC_CR2_SWSTART;
+	while(!(ADC1->SR & ADC_SR_EOC));
+	value = ADC1->DR;
         //if(value > 4090){
         //    value++;
         //}
@@ -406,6 +407,7 @@ int check_for_pickup(void){
             current_team = ADC_val();
             if(current_team == 0 && board[x][y].team == self_team){
                 GPIOB->ODR = 0;
+                ledOn();
                 drawPossibleMoves(board[x][y].type - 1, y, x, self_team);
                 return board[x][y].type;
             }
@@ -433,16 +435,10 @@ void timer_enable(void){
 
 void TIM5_IRQHandler(void){
     int active_piece = check_for_pickup();
-//    if(active_piece != -1){
-//        //Do Something related to the screen
-//        drawPiece(active_piece - 1);
-//        display();
-//    }else{
-//        clearPiece(-1);
-//    }
+
     clearPiece();
     drawPiece(active_piece - 1);
-    //drawPossibleMoves(KING_ID, 1, 1, self_team);
+    if (active_piece == -1) ledOff();
     display();
     TIM5->SR &= ~0x1;
 }
@@ -464,7 +460,6 @@ void update_board(void){
     GPIOB->ODR = 0;
     return;
 }
-
 
 //int main(void)
 //{

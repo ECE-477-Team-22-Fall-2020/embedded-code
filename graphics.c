@@ -33,6 +33,14 @@ void setupUI() {
     drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
 }
 
+void ledOn(void) {
+	GPIOA->BSRR |= 1 << led;
+}
+
+void ledOff(void) {
+	GPIOA->BSRR |= 1 << (led + 16);
+}
+
 void clearExtraInfo(void) {
 	clearArea(EXTRA_INFO_X, EXTRA_INFO_Y, EXTRA_INFO_W, EXTRA_INFO_H);
 }
