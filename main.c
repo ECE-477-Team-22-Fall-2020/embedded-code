@@ -32,8 +32,8 @@ int main(void)
 
     // draw graphics on screen for viewing
 //    testColorDraw();
-    drawUsername("ggargle");
-    testDrawTeamPiece();
+//    drawUsername("ggargle");
+//    testDrawTeamPiece();
 
     display();
 
