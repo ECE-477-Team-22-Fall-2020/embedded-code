@@ -196,6 +196,7 @@ void testDrawTeamPiece(void) {
 		display();
 		delay(1000);
 	}
+	drawSelfPiece(0, 1, 1);
 }
 
 void drawWhitePiece(int id) {
