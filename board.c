@@ -196,7 +196,8 @@ void update_position(void){
                 changed[2 * num_change] = x;
                 changed[(2 * num_change) + 1] = y;
                 num_change++;
-                //4 changes could be either en passant or castling
+                //4 changes castling
+                //3 changes en passant
             }}}
     if(num_change == 4){
         castling(changed);
@@ -460,6 +461,34 @@ void update_board(void){
     }
     GPIOB->ODR = 0;
     return;
+}
+
+void exec_external_move(int init_x, int init_y, int end_x, int end_y){
+    //struct Piece temp;
+    if(board[init_x][init_y].type == KING && (init_x - end_x > 1 || init_x - end_x < -1)){
+        //Castling
+        int changed[] = {-1, -1, -1, -1, -1, -1, -1, -1};
+        if(end_x == 1){
+            int changed[] = {0, init_y, 1, init_y, 2, init_y, 4, init_y};
+        }else{
+            int changed[] = {4, init_y, 5, init_y, 6, init_y, 7, init_y};
+        }
+        castling(changed);
+    }
+    else if(board[init_x][init_y].type == PAWN && (init_x - end_x == 1 || init_x - end_x == -1)){
+        // En passant
+        int changed[] = {-1, -1, -1, -1, -1, -1, -1, -1};
+        if(init_x < end_x){
+           int changed[] = {init_x, init_y, end_x, end_y + 1, end_x, end_y, -1, -1};
+        }else{
+           int changed[] = {end_x, end_y + 1, end_x, end_y, init_x, init_y, -1, -1};
+        }
+        en_passant(changed);
+    }
+    else{
+        board[end_x][end_y] = board[init_x][init_y];
+        board[init_x][init_y] = blank_space;
+    }
 }
 
 //int main(void)
