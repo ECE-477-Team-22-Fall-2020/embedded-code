@@ -27,7 +27,7 @@ void setupUI() {
     resetScoreString();
     drawScore();
 
-//    drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
+    drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
 }
 
 void drawConnected(void) {
