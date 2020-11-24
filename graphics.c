@@ -11,6 +11,7 @@
 
 char * versusString = "Vs:";
 char * phoneString = "Phone:";
+char * scoreHeaderString = "Score:";
 
 // sets up the basic background UI
 void setupUI() {
@@ -22,11 +23,11 @@ void setupUI() {
     drawString(phoneString, PHONE_STATE_X, PHONE_STATE_Y);
     drawDisconnected();
 
-    drawString("Score:", SCORE_HEADER_X, SCORE_HEADER_Y);
+    drawString(scoreHeaderString, SCORE_HEADER_X, SCORE_HEADER_Y);
     resetScoreString();
     drawScore();
 
-    drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
+//    drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
 }
 
 void drawConnected(void) {
@@ -167,6 +168,15 @@ void drawScore() {
 void drawEnemyPiece(int id, int row, int col) {
 	if (self_team == 1) drawBlackPiece(id); // white team
 	if (self_team == 2) drawWhitePiece(id); // black team
+
+	// show user the enemy's moves
+	clearArea(EXTRA_INFO_X, EXTRA_INFO_Y, EXTRA_INFO_W, EXTRA_INFO_H);
+	drawString("Move", EXTRA_INFO_X, EXTRA_INFO_Y);
+	drawString(stringMap(id), EXTRA_INFO_X, EXTRA_INFO_Y + LINE_HEIGHT);
+	char spaceString[] = "to __";
+	spaceString[3] = colMap(col);
+	spaceString[4] = rowMap(row);
+	drawString(spaceString, EXTRA_INFO_X, EXTRA_INFO_Y + (2 * LINE_HEIGHT));
 }
 
 void drawSelfPiece(int id, int row, int col) {
@@ -174,6 +184,18 @@ void drawSelfPiece(int id, int row, int col) {
 	if (self_team == 1) drawWhitePiece(id); // white team
 	if (self_team == 2) drawBlackPiece(id); // black team
 	drawPossibleMoves(id, row, col, self_team);
+}
+
+void testDrawTeamPiece(void) {
+	self_team = 1;
+	for (int i = 0; i < 6; i++) {
+		drawSelfPiece(i, 1, 1);
+		display();
+		delay(1000);
+		drawEnemyPiece(i, 1, 1);
+		display();
+		delay(1000);
+	}
 }
 
 void drawWhitePiece(int id) {
@@ -253,6 +275,7 @@ void drawKing(int color) {
 
 void clearPiece(int color) {
 	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, blank_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
+	clearArea(EXTRA_INFO_X, EXTRA_INFO_Y, EXTRA_INFO_W, EXTRA_INFO_H);
 }
 
 /**************************************************************************/

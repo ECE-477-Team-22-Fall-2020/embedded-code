@@ -16,28 +16,27 @@
 
 int main(void)
 {
+	// screen and led pin setup
     begin();
-    //timer_enable();
+
+    // piece array reading setup
     Pos_select_enable();
     ADC_enable();
     Button_enable();
-
-    testLed();
-
-    //while(1){
-    //    update_board();
-    //}
-    //init_Board_Pawn_Test();
-    //init_Board_White_Bottom();
     update_board();
+
+    // flash led
+//    testLed();
+
     setupUI();
-    testColorDraw();
-//    testConnectedGraphic();
+
+    // draw graphics on screen for viewing
+//    testColorDraw();
+//    drawUsername("ggargle");
+//    testDrawTeamPiece();
 
     display();
-    //timer_enable();
-    //drawPossibleMoves(KING_ID, 1, 1);
-    //init_Board_Pawn_Test();
+
     init_Board_White_Bottom();
     timer_enable();
     while(1){

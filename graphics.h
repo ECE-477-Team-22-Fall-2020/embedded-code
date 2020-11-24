@@ -26,18 +26,19 @@
 
 /**SCREEN REGION DEFINITIONS**/
 
-#define PIECE_FRAME_X 47
+#define PIECE_FRAME_X 50
 #define PIECE_FRAME_Y 13
 #define PIECE_FRAME_W 29
 #define PIECE_FRAME_H 49
 
-#define PIECE_REGION_X 48
-#define PIECE_REGION_Y 14
-#define PIECE_REGION_W 27
-#define PIECE_REGION_H 47
+#define PIECE_REGION_X PIECE_FRAME_X + 1
+#define PIECE_REGION_Y PIECE_FRAME_Y + 1
+#define PIECE_REGION_W PIECE_FRAME_W - 2
+#define PIECE_REGION_H PIECE_FRAME_H - 2
 
 char * versusString;
 char * phoneString;
+char * scoreHeaderString;
 
 #define PLAYER_X 0
 #define PLAYER_Y 0
@@ -51,7 +52,7 @@ char * phoneString;
 #define ICON_X (SSD1325_LCDWIDTH - (CHAR_WIDTH *2))
 #define ICON_Y PHONE_STATE_Y
 
-#define SCORE_HEADER_X (PIECE_REGION_X + PIECE_REGION_W + 3)
+#define SCORE_HEADER_X (((PIECE_REGION_X + PIECE_REGION_W + SSD1325_LCDWIDTH) / 2) - ((CHAR_WIDTH * 6) / 2))
 #define SCORE_HEADER_Y (PIECE_REGION_Y - 1)
 
 #define SCORE_X SCORE_HEADER_X
@@ -313,6 +314,7 @@ void drawUsername(char * username);
 void drawScore(void);
 void drawEnemyPiece(int id, int row, int col);
 void drawSelfPiece(int id, int row, int col);
+void testDrawTeamPiece(void);
 void drawBlackPiece(int id);
 void drawWhitePiece(int id);
 void testColorDraw(void);

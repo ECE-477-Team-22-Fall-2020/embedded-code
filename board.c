@@ -226,7 +226,7 @@ void update_position(void){
 void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
     clearExtraInfo();
 
-    drawString("Moves:", EXTRA_INFO_X, EXTRA_INFO_Y);
+    drawString("Choices:", EXTRA_INFO_X, EXTRA_INFO_Y);
 
     struct Space spaces[NUM_SHOWN_SPACES] = {0};
     int numSpaces = 0;
@@ -398,7 +398,7 @@ int ADC_val(void){
     return team;
 }
 
-int check_for_pickup(void){
+int check_for_pickup(int * row, int * col){
     int x;
     int y;
     int pos_code = 0;
@@ -410,6 +410,8 @@ int check_for_pickup(void){
                 GPIOB->ODR = 0;
                 ledOn();
 //                drawPossibleMoves(board[x][y].type - 1, y, x, self_team);
+                *row = y;
+                *col = x;
                 return board[x][y].type;
             }
             pos_code++;
@@ -434,13 +436,19 @@ void timer_enable(void){
     NVIC->ISER[1] = 1<<(TIM5_IRQn - 32);
 }
 
-void TIM5_IRQHandler(void){
-    int active_piece = check_for_pickup();
-
+void TIM5_IRQHandler(void) {
+	int row;
+	int col;
+    int active_piece = check_for_pickup(&row, &col);
 //    clearPiece();
 //    drawPiece(active_piece - 1);
 //    drawSelfPiece()
-    if (active_piece == -1) ledOff();
+    if (active_piece == -1) {
+    	ledOff();
+    	clearPiece(self_team == 1 ? BLACK : WHITE);
+    } else {
+    	drawSelfPiece(active_piece - 1, row, col);
+    }
     display();
     TIM5->SR &= ~0x1;
 }

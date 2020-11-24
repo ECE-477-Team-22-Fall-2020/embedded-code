@@ -84,7 +84,7 @@ int ADC_val(void);
 // Gets the current value of the ADC and returns the team that would be represented
 // by that magnetic polarity, or lack thereof
 
-int check_for_pickup(void);
+int check_for_pickup(int * row, int * col);
 // Checks the board to see what positions have been modified, and returns
 // the type of piece that has been picked up by the player
 
