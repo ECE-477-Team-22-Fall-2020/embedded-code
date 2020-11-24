@@ -291,9 +291,12 @@ const static unsigned char check_bitmap_bits[] = {
    0x34, 0x00, 0x1c, 0x00, 0x08, 0x00 };
 
 void setupUI(void);
+void drawConnected(void);
+void drawDisconnected(void);
 void ledOn(void);
 void ledOff(void);
 void testLed(void);
+void testConnectedGraphic(void);
 void clearExtraInfo(void);
 char addRow(int row, int b, int team);
 void printPossibleMoves(struct Space * spaces, int num_spaces);

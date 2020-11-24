@@ -18,17 +18,25 @@ void setupUI() {
 
     // will want to eventually initialize this to "No active match"; will need width and height of the region to reset to that
     drawString(versusString, PLAYER_X, PLAYER_Y);
-    drawUsername("ggargle");
 
     drawString(phoneString, PHONE_STATE_X, PHONE_STATE_Y);
-    drawString("X", ICON_X, ICON_Y);
-//    drawXBitmap(ICON_X, ICON_Y, x_bitmap_bits, 9, 9, WHITE);
+    drawDisconnected();
 
     drawString("Score:", SCORE_HEADER_X, SCORE_HEADER_Y);
     resetScoreString();
     drawScore();
 
     drawXBitmap(0, 0, initial_ui_bits, SSD1325_LCDWIDTH, SSD1325_LCDHEIGHT, WHITE);
+}
+
+void drawConnected(void) {
+	clearArea(ICON_X, ICON_Y, CHAR_WIDTH, LINE_HEIGHT);
+    drawXBitmap(ICON_X, ICON_Y, check_bitmap_bits, 9, 9, WHITE);
+}
+
+void drawDisconnected(void) {
+	clearArea(ICON_X, ICON_Y, 9, 9);
+    drawString("X", ICON_X, ICON_Y);
 }
 
 void ledOn(void) {
@@ -44,6 +52,17 @@ void testLed(void) {
 		ledOn();
 		delay(100);
 		ledOff();
+		delay(100);
+	}
+}
+
+void testConnectedGraphic(void) {
+	for (int i = 0; i < 10; i++) {
+		drawConnected();
+		display();
+		delay(100);
+		drawDisconnected();
+		display();
 		delay(100);
 	}
 }
@@ -127,14 +146,15 @@ void fillArea(int x, int y, int width, int height) {
 
 int drawString(char * string, int x, int y) {
 	if (string == NULL) return 0;
-	char current_char = string[0];
-	int i = 1;
-	while (current_char != 0) {
+	char current_char;
+	int i = 0;
+	do {
+		current_char = string[i];
 		drawChar(x + (CHAR_WIDTH * i), y, current_char, WHITE, WHITE, 1, 1);
-		current_char = string[i++];
-	}
+		i++;
+	} while(current_char != 0);
 
-	return i;
+	return i + 1;
 }
 
 void drawUsername(char * username) {

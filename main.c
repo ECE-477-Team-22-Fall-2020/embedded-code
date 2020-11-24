@@ -31,6 +31,8 @@ int main(void)
     //init_Board_White_Bottom();
     update_board();
     setupUI();
+//    testConnectedGraphic();
+
     display();
     //timer_enable();
     //drawPossibleMoves(KING_ID, 1, 1);
