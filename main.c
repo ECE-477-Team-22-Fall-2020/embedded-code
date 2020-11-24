@@ -22,7 +22,7 @@ int main(void)
     ADC_enable();
     Button_enable();
 
-//    testLed();
+    testLed();
 
     //while(1){
     //    update_board();
@@ -31,6 +31,7 @@ int main(void)
     //init_Board_White_Bottom();
     update_board();
     setupUI();
+    testColorDraw();
 //    testConnectedGraphic();
 
     display();

@@ -33,6 +33,8 @@ struct Space{
     char y;
 };
 
+int self_team;
+
 struct Space translate(struct Space current);
 // Used to translate a space used by the opponent to be read as the player's orientation
 

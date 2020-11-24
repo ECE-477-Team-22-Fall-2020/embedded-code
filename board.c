@@ -22,7 +22,6 @@ struct Piece board[MAX_X][MAX_Y];
 struct Piece blank_space = {.type = EMPTY, .team = 0};
 int self_team;
 
-
 struct Space translate(struct Space current){
     current.x = 7 - current.x;
     current.y = 7 - current.y;
@@ -324,7 +323,7 @@ int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directi
             currentDirection = directions[i];
             if (currentDirection == nullDirection){ continue;}
             getCoords(&newRow, &newCol, row, col, currentDist, currentDirection);
-            if (board[newCol][newRow].type == 0) {
+            if (checkAvailable(newRow, newCol, currentTeam) && board[newCol][newRow].type == 0) {
                 spaces[numSpaces].x = newCol;
                 spaces[numSpaces].y = newRow;
                 numSpaces++;
@@ -410,7 +409,7 @@ int check_for_pickup(void){
             if(current_team == 0 && board[x][y].team == self_team){
                 GPIOB->ODR = 0;
                 ledOn();
-                drawPossibleMoves(board[x][y].type - 1, y, x, self_team);
+//                drawPossibleMoves(board[x][y].type - 1, y, x, self_team);
                 return board[x][y].type;
             }
             pos_code++;
@@ -438,8 +437,9 @@ void timer_enable(void){
 void TIM5_IRQHandler(void){
     int active_piece = check_for_pickup();
 
-    clearPiece();
-    drawPiece(active_piece - 1);
+//    clearPiece();
+//    drawPiece(active_piece - 1);
+//    drawSelfPiece()
     if (active_piece == -1) ledOff();
     display();
     TIM5->SR &= ~0x1;

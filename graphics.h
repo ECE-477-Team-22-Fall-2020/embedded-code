@@ -26,7 +26,12 @@
 
 /**SCREEN REGION DEFINITIONS**/
 
-#define PIECE_REGION_X 50
+#define PIECE_FRAME_X 47
+#define PIECE_FRAME_Y 13
+#define PIECE_FRAME_W 29
+#define PIECE_FRAME_H 49
+
+#define PIECE_REGION_X 48
 #define PIECE_REGION_Y 14
 #define PIECE_REGION_W 27
 #define PIECE_REGION_H 47
@@ -306,14 +311,19 @@ void fillArea(int x, int y, int width, int height);
 int drawString(char * string, int x, int y);
 void drawUsername(char * username);
 void drawScore(void);
-void drawPiece(int id);
-void drawPawn(void);
-void drawBishop(void);
-void drawKnight(void);
-void drawRook(void);
-void drawQueen(void);
-void drawKing(void);
-void clearPiece(void);
+void drawEnemyPiece(int id, int row, int col);
+void drawSelfPiece(int id, int row, int col);
+void drawBlackPiece(int id);
+void drawWhitePiece(int id);
+void testColorDraw(void);
+void drawPiece(int id, int color);
+void drawPawn(int color);
+void drawBishop(int color);
+void drawKnight(int color);
+void drawRook(int color);
+void drawQueen(int color);
+void drawKing(int color);
+void clearPiece(int color);
 
 void startWrite();
 void endWrite();

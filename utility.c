@@ -22,9 +22,6 @@ void delay(int ms) {
 
 int checkAvailable(int row, int col, int team) {
 	if (row < 0 || row > 7 || col < 0 || col > 7) return 0;
-
-	// TODO: check the game board to see if there is a friendly piece in the desired space
-
 	return 1;
 }
 

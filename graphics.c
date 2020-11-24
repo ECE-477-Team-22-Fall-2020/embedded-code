@@ -84,7 +84,6 @@ void printPossibleMoves(struct Space * spaces, int numSpaces) {
     int count = 0;
 
     if (numSpaces > NUM_SHOWN_SPACES) {
-    	char dumb[] = "DUMB, AS EXPECTED";
     	numSpaces = NUM_SHOWN_SPACES;
     }
 
@@ -105,9 +104,9 @@ void printPossibleMoves(struct Space * spaces, int numSpaces) {
     // remove final comma
     if (count == 0) return;
     else if (currentX != EXTRA_INFO_X) {
-        clearArea(currentX - CHAR_WIDTH, currentY, CHAR_WIDTH, LINE_HEIGHT);
+        clearArea(currentX - (2 * CHAR_WIDTH), currentY, CHAR_WIDTH, LINE_HEIGHT);
     } else {
-        clearArea(EXTRA_INFO_X + (7 * CHAR_WIDTH), currentY - LINE_HEIGHT, CHAR_WIDTH, LINE_HEIGHT);
+        clearArea(EXTRA_INFO_X + (6 * CHAR_WIDTH), currentY - LINE_HEIGHT, CHAR_WIDTH, LINE_HEIGHT);
     }
 }
 
@@ -154,7 +153,7 @@ int drawString(char * string, int x, int y) {
 		i++;
 	} while(current_char != 0);
 
-	return i + 1;
+	return i;
 }
 
 void drawUsername(char * username) {
@@ -165,46 +164,95 @@ void drawScore() {
 	drawString(scoreString, SCORE_X, SCORE_Y);
 }
 
-void drawPiece(int id) {
-	switch (id) {
-	case PAWN_ID: return drawPawn();
-	case BISHOP_ID: return drawBishop();
-	case KNIGHT_ID: return drawKnight();
-	case ROOK_ID: return drawRook();
-	case QUEEN_ID: return drawQueen();
-	case KING_ID: return drawKing();
-	default: return clearPiece();
+void drawEnemyPiece(int id, int row, int col) {
+	if (self_team == 1) drawBlackPiece(id); // white team
+	if (self_team == 2) drawWhitePiece(id); // black team
+}
+
+void drawSelfPiece(int id, int row, int col) {
+	// uses global self_team from board.h with different team associations
+	if (self_team == 1) drawWhitePiece(id); // white team
+	if (self_team == 2) drawBlackPiece(id); // black team
+	drawPossibleMoves(id, row, col, self_team);
+}
+
+void drawWhitePiece(int id) {
+	clearArea(PIECE_FRAME_X, PIECE_FRAME_Y, PIECE_FRAME_W, PIECE_FRAME_H);
+
+	// draw corners
+	fillArea(PIECE_FRAME_X, PIECE_FRAME_Y, 3, 3);
+	fillArea(PIECE_FRAME_X, PIECE_FRAME_Y + PIECE_FRAME_H - 3, 3, 3);
+	fillArea(PIECE_FRAME_X + PIECE_FRAME_W - 3, PIECE_FRAME_Y, 3, 3);
+	fillArea(PIECE_FRAME_X + PIECE_FRAME_W - 3, PIECE_FRAME_Y + PIECE_FRAME_H - 3, 3, 3);
+
+	clearPiece(BLACK);
+	drawPiece(id, WHITE);
+}
+
+void drawBlackPiece(int id) {
+	fillArea(PIECE_FRAME_X, PIECE_FRAME_Y, PIECE_FRAME_W, PIECE_FRAME_H);
+	drawPiece(id, BLACK);
+	clearArea(PIECE_FRAME_X, PIECE_FRAME_Y, 2, 2);
+	clearArea(PIECE_FRAME_X, PIECE_FRAME_Y + PIECE_FRAME_H - 2, 2, 2);
+	clearArea(PIECE_FRAME_X + PIECE_FRAME_W - 2, PIECE_FRAME_Y, 2, 2);
+	clearArea(PIECE_FRAME_X + PIECE_FRAME_W - 2, PIECE_FRAME_Y + PIECE_FRAME_H - 2, 2, 2);
+}
+
+void testColorDraw(void) {
+	for (int i = 0; i < 6; i++) {
+		drawWhitePiece(i);
+		display();
+		delay(100);
+		drawBlackPiece(i);
+		display();
+		delay(100);
 	}
 }
 
-void drawPawn() {
-	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, pawn_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
-}
-
-void drawBishop(void) {
-	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, bishop_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
+void drawBrackets() {
 
 }
-void drawKnight(void) {
-	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, knight_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
+
+void drawPiece(int id, int color) {
+	switch (id) {
+	case PAWN_ID: return drawPawn(color);
+	case BISHOP_ID: return drawBishop(color);
+	case KNIGHT_ID: return drawKnight(color);
+	case ROOK_ID: return drawRook(color);
+	case QUEEN_ID: return drawQueen(color);
+	case KING_ID: return drawKing(color);
+	default: return clearPiece(color);
+	}
+}
+
+void drawPawn(int color) {
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, pawn_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
+}
+
+void drawBishop(int color) {
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, bishop_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
+
+}
+void drawKnight(int color) {
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, knight_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
 
 
 }
-void drawRook(void) {
-	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, rook_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
+void drawRook(int color) {
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, rook_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
 }
 
-void drawQueen(void) {
-	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, queen_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
+void drawQueen(int color) {
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, queen_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
 
 
 }
-void drawKing(void) {
-	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, king_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, WHITE);
+void drawKing(int color) {
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, king_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
 }
 
-void clearPiece() {
-	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, blank_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, BLACK);
+void clearPiece(int color) {
+	drawXBitmap(PIECE_REGION_X, PIECE_REGION_Y, blank_bitmap_bits, PIECE_REGION_W, PIECE_REGION_H, color);
 }
 
 /**************************************************************************/
