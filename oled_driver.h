@@ -25,12 +25,12 @@
 
 #define HIGH 1
 #define LOW 0
-#define dc 3
+#define dc 9
 #define cs 4
 #define rst 6
 #define sclk 5
 #define mosi 7
-#define led 2
+#define led 8
 
 /*=========================================================================
     SSD1325 Displays
