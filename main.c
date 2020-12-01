@@ -32,7 +32,7 @@ int main(void)
 
     // draw graphics on screen for viewing
 //    testColorDraw();
-//    drawUsername("ggargle");
+    drawUsername("ggargle");
 //    testDrawTeamPiece();
 
     display();

@@ -162,6 +162,7 @@ void Pos_select_enable(void){
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
     GPIOB->MODER &= ~0xffff;
     GPIOB->MODER |= 0x5555;
+    GPIOB->ODR |= 1 << 6;
 
     return;
 }
@@ -403,26 +404,35 @@ int check_for_pickup(int * row, int * col){
     int y;
     int pos_code = 0;
     int current_team;
+    int return_team = -1;
+    int placed = 0;
     for(x = 0; x < MAX_X; x++){
         for(y = 0; y < MAX_Y; y++){
             current_team = ADC_val();
             if(current_team == 0 && board[x][y].team == self_team){
-                GPIOB->ODR = 0;
+                //GPIOB->ODR = 0;
                 ledOn();
 //                drawPossibleMoves(board[x][y].type - 1, y, x, self_team);
                 *row = y;
                 *col = x;
-                return board[x][y].type;
+                //return board[x][y].type;
+                return_team = board[x][y].type;
+            }
+            if(current_team == self_team && board[x][y].team != self_team){
+                placed = 1;
             }
             pos_code++;
+            //GPIOB->ODR &= ~0x3f;
             GPIOB->ODR = pos_code;
+
             //int tester = pos_code;
         }
         //pos_code++;
         //GPIOB->ODR = pos_code;
     }
     GPIOB->ODR = 0;
-    return -1;
+    GPIOB->ODR |= (placed << 6);
+    return return_team;
 }
 
 void timer_enable(void){

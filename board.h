@@ -91,6 +91,7 @@ int check_for_pickup(int * row, int * col);
 void update_board(void);
 // Updates the "teams" matrix with the values given by ADC_val() at every space
 
+void exec_external_move(int init_x, int init_y, int end_x, int end_y);
 
 
 #endif /* BOARD_H_ */
