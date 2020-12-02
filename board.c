@@ -22,6 +22,7 @@ struct Piece board[MAX_X][MAX_Y];
 struct Piece blank_space = {.type = EMPTY, .team = 0};
 int self_team;
 int last_en_passant = -1;
+int cached_active_piece = -1;
 
 struct Space translate(struct Space current){
     current.x = 7 - current.x;
@@ -551,19 +552,22 @@ void USART2_IRQHandler(void){
 }
 
 void TIM5_IRQHandler(void) {
-	int row;
-	int col;
-    int active_piece = check_for_pickup(&row, &col);
-//    clearPiece();
-//    drawPiece(active_piece - 1);
-//    drawSelfPiece()
-    if (active_piece == -1) {
-    	ledOff();
-    	clearPiece(self_team == 1 ? BLACK : WHITE);
-    } else {
-    	drawSelfPiece(active_piece - 1, row, col);
+    int row;
+    int col;
+    int new_active_piece = check_for_pickup(&row, &col);
+    //    clearPiece();
+    //    drawPiece(active_piece - 1);
+    //    drawSelfPiece()
+    if (new_active_piece != cached_active_piece) {
+        if (new_active_piece == -1) {
+            ledOff();
+            clearPiece(self_team == 1 ? BLACK : WHITE);
+        } else {
+            drawSelfPiece(new_active_piece - 1, row, col);
+        }
+        cached_active_piece = new_active_piece;
+        display();
     }
-    display();
     TIM5->SR &= ~0x1;
 }
 

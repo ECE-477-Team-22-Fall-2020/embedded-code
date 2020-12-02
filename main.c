@@ -41,7 +41,7 @@ int main(void)
 	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     usart_enable();
-    timer_enable();
+    //timer_enable();
 
     // flash led
 //    testLed();
