@@ -24,6 +24,18 @@ int main(void)
     ADC_enable();
     Button_enable();
     update_board();
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+
+    GPIO_InitStruct.Pin = (1 << 12) | (1 << 13) | (1 << 14) | (1 << 15);
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+    usart_enable();
+    timer_enable();
 
     // flash led
 //    testLed();

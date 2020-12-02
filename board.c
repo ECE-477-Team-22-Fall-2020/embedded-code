@@ -474,7 +474,7 @@ void usart_enable(void){
 }
 
 void TIM2_IRQHandler(void){
-    if (strlen(bluetooth_buffer) > 0)
+    if (strLen(bluetooth_buffer) > 0)
         timer_count++;
     if (timer_count > 5)
         MessageHandler();

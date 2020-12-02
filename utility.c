@@ -9,8 +9,20 @@ char * king_string = "King";
 
 char scoreString[] = "00-00";
 
+char bluetooth_buffer[BLUETOOTH_BUFFER_SIZE];
 uint8_t timer_count = 0;
 uint8_t buffer_index = 0;
+
+// Only works for the bluetooth buffer
+int strLen(char buf[]) {
+	char current_char;
+	int i = 0;
+	do {
+		current_char = buf[i++];
+	} while (current_char != 0 && i < (BLUETOOTH_BUFFER_SIZE - 1));
+
+	return i;
+}
 
 uint8_t stringCompare(char array1[], char array2[], uint16_t length)
 {
@@ -51,25 +63,28 @@ void MessageHandler(void)
             pin = (1 << 12);
             break;
     }
-    if (string_compare(bluetooth_buffer + 2, "LED ON", strlen("LED ON")))
+    if (stringCompare(bluetooth_buffer + 2, "LED ON", strLen("LED ON")))
     {
         HAL_GPIO_WritePin(port, pin, SET);
         HAL_UART_Transmit(&huart2, (uint8_t *)"LED is ON.\n",
-                          strlen("LED is ON.\n"), 500);
+                          strLen("LED is ON.\n"), 500);
     }
-    else if (string_compare(bluetooth_buffer + 2, "LED OFF", strlen("LED OFF")))
+    else if (stringCompare(bluetooth_buffer + 2, "LED OFF", strLen("LED OFF")))
     {
         HAL_GPIO_WritePin(port, pin, RESET);
         HAL_UART_Transmit(&huart2, (uint8_t *)"LED is OFF.\n",
-                          strlen("LED is OFF.\n"), 500);
+                          strLen("LED is OFF.\n"), 500);
     }
     else
     {
-        strcat(bluetooth_buffer, "\n");
-        HAL_UART_Transmit(&huart2, (uint8_t *)bluetooth_buffer, strlen(bluetooth_buffer), 500);
+        bluetooth_buffer[strLen(bluetooth_buffer)] = '\n';
+		HAL_UART_Transmit(&huart2, (uint8_t *)bluetooth_buffer, strLen(bluetooth_buffer), 500);
     }
 
-    memset(bluetooth_buffer, 0, sizeof(bluetooth_buffer));
+    for (int i = 0; i < BLUETOOTH_BUFFER_SIZE; i++) {
+    	bluetooth_buffer[i] = 0;
+    }
+
     buffer_index = 0;
     timer_count = 0;
 }

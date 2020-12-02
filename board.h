@@ -11,6 +11,7 @@
 #include "stm32f4xx.h"
 #include "stm32f411e_discovery.h"
 #include "graphics.h"
+#include "utility.h"
 
 #define MAX_X  8
 #define MAX_Y  8
