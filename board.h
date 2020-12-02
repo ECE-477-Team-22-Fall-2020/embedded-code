@@ -59,6 +59,12 @@ void en_passant(int changed[]);
 void timer_enable(void);
 // Enables the timer for use with drawing screens
 
+void usart_enable(void);
+
+void TIM2_IRQHandler(void);
+
+void USART2_IRQHandler(void);
+
 void TIM5_IRQHandler(void);
 // Handles redrawing of the Active Piece
 

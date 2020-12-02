@@ -444,6 +444,48 @@ void timer_enable(void){
 
     TIM5->CR1 |= 0x1;
     NVIC->ISER[1] = 1<<(TIM5_IRQn - 32);
+
+    RCC->APB1ENR |= 0x1;
+    TIM2->CR1 &= ~0x10;
+    TIM2->ARR = 1999;
+    TIM2->PSC = 799;
+    TIM2->DIER |= 0x1;
+
+    TIM2->CR1 |= 0x1;
+    NVIC->ISER[0] = 1<<(TIM2_IRQn);
+}
+
+void usart_enable(void){
+    RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
+
+    USART2->BRR = 9600 << 4;
+    USART2->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_RE;
+
+//    huart2.Instance = USART2;
+//    huart2.Init.BaudRate = 9600;
+//    huart2.Init.WordLength = UART_WORDLENGTH_8B;
+//    huart2.Init.StopBits = UART_STOPBITS_1;
+//    huart2.Init.Parity = UART_PARITY_NONE;
+//    huart2.Init.Mode = UART_MODE_TX_RX;
+//    huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+//    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+
+    NVIC->ISER[1] |= 1<<(USART2_IRQn - 32);
+}
+
+void TIM2_IRQHandler(void){
+    if (strlen(buffer) > 0)
+        timer_count++;
+    if (timer_count > 5)
+        Message_handler();
+    /* USER CODE END TIM2_IRQn 0 */
+    //HAL_TIM_IRQHandler(&htim2);
+    TIM2->SR &= ~0x1;
+}
+
+void USART2_IRQHandler(void){
+    int gamerbois = USART2->DR;
+
 }
 
 void TIM5_IRQHandler(void) {
