@@ -474,10 +474,10 @@ void usart_enable(void){
 }
 
 void TIM2_IRQHandler(void){
-    if (strlen(buffer) > 0)
+    if (strlen(bluetooth_buffer) > 0)
         timer_count++;
     if (timer_count > 5)
-        Message_handler();
+        MessageHandler();
     /* USER CODE END TIM2_IRQn 0 */
     //HAL_TIM_IRQHandler(&htim2);
     TIM2->SR &= ~0x1;
@@ -485,7 +485,6 @@ void TIM2_IRQHandler(void){
 
 void USART2_IRQHandler(void){
     int gamerbois = USART2->DR;
-
 }
 
 void TIM5_IRQHandler(void) {

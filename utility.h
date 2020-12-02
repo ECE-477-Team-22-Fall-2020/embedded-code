@@ -33,6 +33,13 @@ char scoreString[6];
 
 enum directions {n, s, e, w, nw, ne, sw, se, nullDirection};
 
+char bluetooth_buffer[50];
+uint8_t timer_count;
+uint8_t buffer_index;
+UART_HandleTypeDef huart2;
+
+uint8_t stringCompare(char array1[], char array2[], uint16_t length);
+void MessageHandler(void);
 void delay(int ms);
 int checkAvailable(int row, int col, int team);
 int some(char list[], int length);
