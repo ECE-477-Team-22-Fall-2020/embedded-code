@@ -230,7 +230,7 @@ int checkEnemy(int row, int col) {
 }
 
 int checkEmpty(int row, int col) {
-	return (board[col][row].team == 1 || board[col][row] == 2) ? 0 : 1;
+	return (board[col][row].team == 1 || board[col][row].team == 2) ? 0 : 1;
 }
 
 void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
@@ -266,14 +266,14 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 
         // attack move 1
         newRow = addRow(row, 1, currentTeam);
-        if (checkInBounds(newRow, col + 1, currentTeam) && checkEnemy(newRow, col + 1)) {
+        if (checkInBounds(newRow, col + 1) && checkEnemy(newRow, col + 1)) {
         	spaces[numSpaces].x = col + 1;
         	spaces[numSpaces].y = newRow;
         	numSpaces++;
         }
 
         // attack move 2
-		if (checkInBounds(newRow, col - 1, currentTeam) && checkEnemy(newRow, col - 1)) {
+		if (checkInBounds(newRow, col - 1) && checkEnemy(newRow, col - 1)) {
 			spaces[numSpaces].x = col - 1;
 			spaces[numSpaces].y = newRow;
 			numSpaces++;
