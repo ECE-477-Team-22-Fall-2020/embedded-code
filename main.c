@@ -26,6 +26,12 @@ int main(void)
     update_board();
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
+
+        __HAL_RCC_SYSCFG_CLK_ENABLE();
+        __HAL_RCC_PWR_CLK_ENABLE();
+
+        HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_0);
+
     __HAL_RCC_GPIOD_CLK_ENABLE();
 
     GPIO_InitStruct.Pin = (1 << 12) | (1 << 13) | (1 << 14) | (1 << 15);

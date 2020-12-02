@@ -21,7 +21,7 @@ int strLen(char buf[]) {
 		current_char = buf[i++];
 	} while (current_char != 0 && i < (BLUETOOTH_BUFFER_SIZE - 1));
 
-	return i;
+	return i - 1;
 }
 
 uint8_t stringCompare(char array1[], char array2[], uint16_t length)
@@ -44,6 +44,9 @@ void MessageHandler(void)
 {
     GPIO_TypeDef *port;
     uint16_t pin;
+
+    //int test = strLen("Matt");
+
     switch (bluetooth_buffer[0])
     {
         case 'B':

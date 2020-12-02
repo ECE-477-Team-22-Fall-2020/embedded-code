@@ -458,19 +458,23 @@ void timer_enable(void){
 void usart_enable(void){
     RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 
-    USART2->BRR = 9600 << 4;
-    USART2->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_RE;
+    //USART2->BRR = 9600 << 4;
+    //USART2->CR1 |= USART_CR1_UE | USART_CR1_RXNEIE | USART_CR1_RE;
 
-//    huart2.Instance = USART2;
-//    huart2.Init.BaudRate = 9600;
-//    huart2.Init.WordLength = UART_WORDLENGTH_8B;
-//    huart2.Init.StopBits = UART_STOPBITS_1;
-//    huart2.Init.Parity = UART_PARITY_NONE;
-//    huart2.Init.Mode = UART_MODE_TX_RX;
-//    huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-//    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-
-    NVIC->ISER[1] |= 1<<(USART2_IRQn - 32);
+    huart2.Instance = USART2;
+    huart2.Init.BaudRate = 9600;
+    huart2.Init.WordLength = UART_WORDLENGTH_8B;
+    huart2.Init.StopBits = UART_STOPBITS_1;
+    huart2.Init.Parity = UART_PARITY_NONE;
+    huart2.Init.Mode = UART_MODE_TX_RX;
+    huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+    if (HAL_UART_Init(&huart2) != HAL_OK)
+    {
+        //Error_Handler();
+    }
+    __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+    //NVIC->ISER[1] |= 1<<(USART2_IRQn - 32);
 }
 
 void TIM2_IRQHandler(void){
@@ -484,7 +488,11 @@ void TIM2_IRQHandler(void){
 }
 
 void USART2_IRQHandler(void){
-    int gamerbois = USART2->DR;
+    HAL_UART_Receive(&huart2, (uint8_t *)&bluetooth_buffer[buffer_index++], 1, 10);
+    if(bluetooth_buffer[buffer_index - 1] == '\n')
+        MessageHandler();
+    HAL_UART_IRQHandler(&huart2);
+    //int gamerbois = USART2->DR;
 }
 
 void TIM5_IRQHandler(void) {
