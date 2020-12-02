@@ -44,7 +44,7 @@ int strLen(char[]);
 uint8_t stringCompare(char array1[], char array2[], uint16_t length);
 void MessageHandler(void);
 void delay(int ms);
-int checkAvailable(int row, int col, int team);
+int checkInBounds(int row, int col);
 int some(char list[], int length);
 void getCoords(int * newRow, int * newCol, int row, int col, int dist, int direction);
 char * stringMap(int id);

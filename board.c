@@ -21,6 +21,7 @@ int teams[MAX_X][MAX_Y];
 struct Piece board[MAX_X][MAX_Y];
 struct Piece blank_space = {.type = EMPTY, .team = 0};
 int self_team;
+int last_en_passant = -1;
 
 struct Space translate(struct Space current){
     current.x = 7 - current.x;
@@ -224,26 +225,65 @@ void update_position(void){
     return;
 }
 
+int checkEnemy(int row, int col) {
+	return (board[col][row].team == getEnemy(self_team)) ? 1 : 0;
+}
+
+int checkEmpty(int row, int col) {
+	return (board[col][row].team == 1 || board[col][row] == 2) ? 0 : 1;
+}
+
 void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
     clearExtraInfo();
 
     drawString("Choices:", EXTRA_INFO_X, EXTRA_INFO_Y);
 
-    struct Space spaces[NUM_SHOWN_SPACES] = {0};
+    struct Space spaces[NUM_SHOWN_SPACES + 1] = {0};
     int numSpaces = 0;
 
     switch(piece) {
     case PAWN_ID: {
+        int newRow;
+
+        // initially, you can move forward two
         if (teamY(row, currentTeam) == 1) {
-            if (checkAvailable(addRow(row, 2, currentTeam), col, currentTeam)) {
+        	newRow = addRow(row, 2, currentTeam);
+            if (checkInBounds(newRow, col) && checkEmpty(newRow, col)) {
                 spaces[numSpaces].x = col;
-                spaces[numSpaces].y = addRow(row, 2, currentTeam);
+                spaces[numSpaces].y = newRow;
                 numSpaces++;
             }
         }
-        if (checkAvailable(addRow(row, 1, currentTeam), col, currentTeam)) {
+
+        // en passante
+        int diff = row - last_en_passant;
+        diff = diff < 0 ? -1 * diff : diff;
+        if (teamY(row, currentTeam) == 5 && diff == 1 && last_en_passant != -1) {
+        	spaces[numSpaces].x = last_en_passant;
+        	spaces[numSpaces].y = addRow(row, 1, currentTeam);
+        	numSpaces++;
+        }
+
+        // attack move 1
+        newRow = addRow(row, 1, currentTeam);
+        if (checkInBounds(newRow, col + 1, currentTeam) && checkEnemy(newRow, col + 1)) {
+        	spaces[numSpaces].x = col + 1;
+        	spaces[numSpaces].y = newRow;
+        	numSpaces++;
+        }
+
+        // attack move 2
+		if (checkInBounds(newRow, col - 1, currentTeam) && checkEnemy(newRow, col - 1)) {
+			spaces[numSpaces].x = col - 1;
+			spaces[numSpaces].y = newRow;
+			numSpaces++;
+		}
+
+		// normal forward move
+		newRow = addRow(row, 1, currentTeam);
+        if (checkInBounds(newRow, col) && checkEmpty(newRow, col)) {
             spaces[numSpaces].x = col;
-            spaces[numSpaces].y = addRow(row, 1, currentTeam);
+            spaces[numSpaces].y = newRow;
             numSpaces++;
         }
         break;
@@ -255,15 +295,17 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
     case KNIGHT_ID: {
         int twos[] = {-2, 2};
         int ones[] = {-1, 1};
-        for(int x = 0; x < 2; x++){
-            for(int y = 0; y < 2; y++){
-                if((col + twos[x]) <= 7 && (col + twos[x]) >= 0){
-                    if((row + ones[y]) <= 7 && (row + ones[y]) >= 0){
-                        spaces[numSpaces].x = col + twos[x];
-                        spaces[numSpaces].y = row + ones[y];
-                        numSpaces++;
-                    }
-                }
+        int newRow;
+        int newCol;
+        for(int x = 0; x < 2; x++) {
+            for(int y = 0; y < 2; y++) {
+            	newCol = col + twos[x];
+            	newRow = row + ones[y];
+            	if (checkInBounds(newRow, newCol) && (checkEmpty(newRow, newCol) || checkEnemy(newRow, newCol))) {
+            		spaces[numSpaces].x = newCol;
+					spaces[numSpaces].y = newRow;
+					numSpaces++;
+            	}
 
                 if (numSpaces >= NUM_SHOWN_SPACES) {
                     x = 3;
@@ -274,13 +316,13 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 
         for(int x = 0; x < 2; x++){
             for(int y = 0; y < 2; y++){
-                if((row + twos[x]) <= 7 && (row + twos[x]) >= 0){
-                    if((col + ones[y]) <= 7 && (col + ones[y]) >= 0){
-                        spaces[numSpaces].x = col + ones[y];
-                        spaces[numSpaces].y = row + twos[x];
-                        numSpaces++;
-                    }
-                }
+            	newCol = col + ones[x];
+				newRow = row + twos[y];
+				if (checkInBounds(newRow, newCol) && (checkEmpty(newRow, newCol) || checkEnemy(newRow, newCol))) {
+					spaces[numSpaces].x = newCol;
+					spaces[numSpaces].y = newRow;
+					numSpaces++;
+				}
 
                 if (numSpaces >= NUM_SHOWN_SPACES) {
                     x = 3;
@@ -324,11 +366,24 @@ int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directi
             currentDirection = directions[i];
             if (currentDirection == nullDirection){ continue;}
             getCoords(&newRow, &newCol, row, col, currentDist, currentDirection);
-            if (checkAvailable(newRow, newCol, currentTeam) && board[newCol][newRow].type == 0) {
-                spaces[numSpaces].x = newCol;
-                spaces[numSpaces].y = newRow;
-                numSpaces++;
-                if (numSpaces == NUM_SHOWN_SPACES) break;
+            if (checkInBounds(newRow, newCol)) {
+            	// enemy piece blocking
+            	if (checkEnemy(newRow, newCol)) {
+            		spaces[numSpaces].x = newCol;
+					spaces[numSpaces].y = newRow;
+					numSpaces++;
+					directions[i] = nullDirection;
+				// empty space
+            	} else if (checkEmpty(newRow, newCol)) {
+            		spaces[numSpaces].x = newCol;
+					spaces[numSpaces].y = newRow;
+					numSpaces++;
+				// own piece blocking
+            	} else {
+            		directions[i] = nullDirection;
+            	}
+                if (numSpaces == NUM_SHOWN_SPACES) return numSpaces;
+            // outside of board range
             } else {
                 directions[i] = nullDirection;
             }

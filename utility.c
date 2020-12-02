@@ -103,7 +103,12 @@ void delay(int ms) {
 	}
 }
 
-int checkAvailable(int row, int col, int team) {
+int getEnemy(int team) {
+	if (team == 0) return 0;
+	return team == 1 ? 2 : 1;
+}
+
+int checkInBounds(int row, int col) {
 	if (row < 0 || row > 7 || col < 0 || col > 7) return 0;
 	return 1;
 }
