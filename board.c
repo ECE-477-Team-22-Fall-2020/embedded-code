@@ -311,7 +311,7 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
         // en passante
         int diff = col - last_en_passant;
         diff = diff < 0 ? -1 * diff : diff;
-        if (teamY(row, currentTeam) == 5 && diff == 1 && last_en_passant != -1) {
+        if (teamY(row, currentTeam) == 4 && diff == 1 && last_en_passant != -1) {
         	spaces[numSpaces].x = last_en_passant;
         	spaces[numSpaces].y = addRow(row, 1, currentTeam);
         	numSpaces++;
