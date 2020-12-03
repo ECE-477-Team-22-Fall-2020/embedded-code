@@ -69,6 +69,8 @@ void USART2_IRQHandler(void);
 void TIM5_IRQHandler(void);
 // Handles redrawing of the Active Piece
 
+void sendMove(int init_x, int init_y, int end_x, int end_y);
+
 void update_position(void);
 // Uses the "teams" matrix to update the positions of the virtual board to match
 // the physical board. Calls castling() and en_passant() as needed

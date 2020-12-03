@@ -140,8 +140,8 @@ int scoreMap(int id) {
     return 0;
 }
 
-char colMap(int row) {
-    switch(row) {
+char colMap(int col) {
+    switch(col) {
     case 0: return 'A';
     case 1: return 'B';
     case 2: return 'C';

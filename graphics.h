@@ -312,7 +312,7 @@ void fillArea(int x, int y, int width, int height);
 int drawString(char * string, int x, int y);
 void drawUsername(char * username);
 void drawScore(void);
-void drawEnemyPiece(int id, int row, int col);
+void drawEnemyPiece(int id, int oldRow, int oldCol, int row, int col);
 void drawSelfPiece(int id, int row, int col);
 void testDrawTeamPiece(void);
 void drawBlackPiece(int id);

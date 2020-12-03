@@ -90,8 +90,8 @@ void printPossibleMoves(struct Space * spaces, int numSpaces) {
 
     for (int currentIndex = 0; currentIndex < numSpaces; currentIndex++) {
     	currentSpace = spaces[currentIndex];
-        displayString[0] = colMap(currentSpace.y);
-        displayString[1] = rowMap(currentSpace.x);
+        displayString[0] = colMap(currentSpace.x);
+        displayString[1] = rowMap(currentSpace.y);
         currentX += CHAR_WIDTH * drawString(displayString, currentX, currentY);
         count++;
 
@@ -165,18 +165,23 @@ void drawScore() {
 	drawString(scoreString, SCORE_X, SCORE_Y);
 }
 
-void drawEnemyPiece(int id, int row, int col) {
+void drawEnemyPiece(int id, int oldRow, int oldCol, int row, int col) {
 	if (self_team == 1) drawBlackPiece(id); // white team
 	if (self_team == 2) drawWhitePiece(id); // black team
 
 	// show user the enemy's moves
 	clearArea(EXTRA_INFO_X, EXTRA_INFO_Y, EXTRA_INFO_W, EXTRA_INFO_H);
-	drawString("Move", EXTRA_INFO_X, EXTRA_INFO_Y);
+    char fromString[] = "Move __";
+    fromString[5] = colMap(oldCol);
+    fromString[6] = rowMap(oldRow);
+	drawString(fromString, EXTRA_INFO_X, EXTRA_INFO_Y);
+
 	drawString(stringMap(id), EXTRA_INFO_X, EXTRA_INFO_Y + LINE_HEIGHT);
-	char spaceString[] = "to __";
-	spaceString[3] = colMap(col);
-	spaceString[4] = rowMap(row);
-	drawString(spaceString, EXTRA_INFO_X, EXTRA_INFO_Y + (2 * LINE_HEIGHT));
+
+	char toString[] = "to __";
+	toString[3] = colMap(col);
+	toString[4] = rowMap(row);
+	drawString(toString, EXTRA_INFO_X, EXTRA_INFO_Y + (2 * LINE_HEIGHT));
 }
 
 void drawSelfPiece(int id, int row, int col) {
@@ -192,7 +197,7 @@ void testDrawTeamPiece(void) {
 		drawSelfPiece(i, 1, 1);
 		display();
 		delay(1000);
-		drawEnemyPiece(i, 1, 1);
+		drawEnemyPiece(i, 0, 0, 1, 1);
 		display();
 		delay(1000);
 	}

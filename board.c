@@ -23,6 +23,8 @@ struct Piece blank_space = {.type = EMPTY, .team = 0};
 int self_team;
 int last_en_passant = -1;
 int cached_active_piece = -1;
+int cached_row = -1;
+int cached_col = -1;
 
 struct Space translate(struct Space current){
     current.x = 7 - current.x;
@@ -186,6 +188,18 @@ void en_passant(int changed[]){
     return;
 }
 
+void sendMove(int init_x, int init_y, int end_x, int end_y){
+    bluetooth_buffer[0] = colMap(init_x) + 32;
+    bluetooth_buffer[1] = rowMap(init_y);
+    bluetooth_buffer[2] = colMap(end_x) + 32;
+    bluetooth_buffer[3] = rowMap(end_y);
+
+    HAL_UART_Transmit(&huart2, (uint8_t *)bluetooth_buffer, strLen(bluetooth_buffer), 500);
+    for (int i = 0; i < BLUETOOTH_BUFFER_SIZE; i++) {
+        bluetooth_buffer[i] = 0;
+    }
+}
+
 void update_position(void){
 
     int changed[] = {-1, -1, -1, -1, -1, -1, -1, -1};
@@ -214,14 +228,21 @@ void update_position(void){
         if(teams[changed[0]][changed[1]] == 0){
             board[changed[2]][changed[3]] = board[changed[0]][changed[1]];
             board[changed[0]][changed[1]] = blank_space;
+            sendMove(changed[0], changed[1], changed[2], changed[3]);
         }else{
             board[changed[0]][changed[1]] = board[changed[2]][changed[3]];
             board[changed[2]][changed[3]] = blank_space;
+            sendMove(changed[2], changed[3], changed[0], changed[1]);
         }
     }else{
         temp = board[changed[0]][changed[1]];
         board[changed[0]][changed[1]] = board[changed[2]][changed[3]];
         board[changed[2]][changed[3]] = temp;
+        if(board[changed[0]][changed[1]].type == 0){
+            sendMove(changed[0], changed[1], changed[2], changed[3]);
+        }else{
+            sendMove(changed[2], changed[3], changed[0], changed[1]);
+        }
     }
     return;
 }
@@ -444,7 +465,7 @@ int ADC_val(void){
         //GPIOD->ODR ^= 0x1000;
         team = 1;
     }
-    else if(value < 200){
+    else if(value < 300){
         //GPIOD->ODR ^= 0x2000;
         team = 2;
     }
@@ -465,7 +486,7 @@ int check_for_pickup(int * row, int * col){
     for(x = 0; x < MAX_X; x++){
         for(y = 0; y < MAX_Y; y++){
             current_team = ADC_val();
-            if(current_team == 0 && board[x][y].team == self_team){
+            if(current_team == 0 && board[x][y].team != 0){
                 //GPIOB->ODR = 0;
                 ledOn();
 //                drawPossibleMoves(board[x][y].type - 1, y, x, self_team);
@@ -558,7 +579,7 @@ void TIM5_IRQHandler(void) {
     //    clearPiece();
     //    drawPiece(active_piece - 1);
     //    drawSelfPiece()
-    if (new_active_piece != cached_active_piece) {
+    if (new_active_piece != cached_active_piece || row != cached_row || col != cached_col) {
         if (new_active_piece == -1) {
             ledOff();
             clearPiece(self_team == 1 ? BLACK : WHITE);
@@ -566,6 +587,8 @@ void TIM5_IRQHandler(void) {
             drawSelfPiece(new_active_piece - 1, row, col);
         }
         cached_active_piece = new_active_piece;
+        cached_row = row;
+        cached_col = col;
         display();
     }
     TIM5->SR &= ~0x1;
@@ -658,8 +681,12 @@ void EnemyMoveSwap(char * move){
     init_y = 7 - (move[1] - 49);
     end_x = colSwap(move[2]);
     end_y = 7 - (move[3] - 49);
+
+    int piece_id = board[init_x][init_y].type;
     exec_external_move(init_x, init_y, end_x, end_y);
-    init_x++;
+
+    drawEnemyPiece(piece_id - 1, init_y, init_x, end_y, end_x);
+    display();
 }
 
 void MessageHandler(void)
@@ -717,25 +744,3 @@ void MessageHandler(void)
     buffer_index = 0;
     timer_count = 0;
 }
-
-//int main(void)
-//{
-//    Pos_select_enable();
-//    ADC_enable();
-//    Button_enable();
-//    init_Board_Pawn_Test();
-//    int test = 0;
-//    int active_piece = -1;
-//    for(;;){
-//        active_piece = check_for_pickup();
-//        if(active_piece != -1){
-//            //Do Something related to the screen
-//        }
-//        //update_board();
-//        //update_position();
-//        test++;
-//    }
-
-
-//}
-
