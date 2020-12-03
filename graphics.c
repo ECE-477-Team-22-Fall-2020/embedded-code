@@ -162,6 +162,7 @@ void drawUsername(char * username) {
 }
 
 void drawScore() {
+	clearArea(SCORE_X, SCORE_Y, CHAR_WIDTH * 5, LINE_HEIGHT);
 	drawString(scoreString, SCORE_X, SCORE_Y);
 }
 

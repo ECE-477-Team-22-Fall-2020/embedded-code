@@ -7,16 +7,6 @@
 
 #include "board.h"
 
-/**
-  ******************************************************************************
-  * @file    main.c
-  * @author  Ac6
-  * @version V1.0
-  * @date    01-December-2013
-  * @brief   Default main function.
-  ******************************************************************************
-*/
-
 int teams[MAX_X][MAX_Y];
 struct Piece board[MAX_X][MAX_Y];
 struct Piece blank_space = {.type = EMPTY, .team = 0};
@@ -220,9 +210,6 @@ void sendMove(int init_x, int init_y, int end_x, int end_y) {
 	sendBuffer[4] = 0x00;
 
     HAL_UART_Transmit(&huart2, (uint8_t *)sendBuffer, 4, 500);
-//    for (int i = 0; i < BLUETOOTH_BUFFER_SIZE; i++) {
-//        bluetooth_buffer[i] = 0;
-//    }
 }
 
 void update_position(void) {
@@ -254,19 +241,25 @@ void update_position(void) {
     }
     if (num_change == 3) {
         en_passant(changed);
+        addSelfScore(scoreMap(PAWN - 1));
         return;
     }
     if (board[changed[0]][changed[1]].team != 0 && board[changed[2]][changed[3]].team != 0) {
         //THIS IS WHERE CAPTURE HAPPENS
+    	// TODO: add score updating code
+    	// Matt please check this
         if (teams[changed[0]][changed[1]] == 0) {
+        	addSelfScore(scoreMap(board[changed[2]][changed[3]].type - 1));
             board[changed[2]][changed[3]] = board[changed[0]][changed[1]];
             board[changed[0]][changed[1]] = blank_space;
             sendMove(changed[0], changed[1], changed[2], changed[3]);
         } else {
+        	addSelfScore(scoreMap(board[changed[0]][changed[1]].type - 1));
             board[changed[0]][changed[1]] = board[changed[2]][changed[3]];
             board[changed[2]][changed[3]] = blank_space;
             sendMove(changed[2], changed[3], changed[0], changed[1]);
         }
+        drawScore();
     } else {
         temp = board[changed[0]][changed[1]];
         board[changed[0]][changed[1]] = board[changed[2]][changed[3]];
@@ -409,7 +402,7 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
 int getSpaces(struct Space * spaces, int row, int col, int maxDist, char directions[], int numDirections) {
     int numSpaces = 0;
     int currentDist = 1;
-    int currentTeam = WHITE_TEAM; // TODO: Make a global that keeps track of this
+    int currentTeam = WHITE_TEAM;
     int currentDirection;
 
 
@@ -649,7 +642,6 @@ void update_board(void) {
 }
 
 void exec_external_move(int init_x, int init_y, int end_x, int end_y) {
-    //struct Piece temp;
     if (board[init_x][init_y].type == KING && (init_x - end_x > 1 || init_x - end_x < -1)) {
         //Castling
         int changed[] = {-1, -1, -1, -1, -1, -1, -1, -1};
@@ -661,7 +653,7 @@ void exec_external_move(int init_x, int init_y, int end_x, int end_y) {
         castling(changed);
     }
     else if (board[init_x][init_y].type == PAWN && (init_x - end_x == 1 || init_x - end_x == -1)) {
-        // En passant
+        // check for an executed en passant
         int changed[] = {-1, -1, -1, -1, -1, -1, -1, -1};
         if (init_x < end_x) {
            int changed[] = {init_x, init_y, end_x, end_y + 1, end_x, end_y, -1, -1};
@@ -669,15 +661,24 @@ void exec_external_move(int init_x, int init_y, int end_x, int end_y) {
            int changed[] = {end_x, end_y + 1, end_x, end_y, init_x, init_y, -1, -1};
         }
         en_passant(changed);
+        addEnemyScore(scoreMap(PAWN - 1));
     }
     else {
-    	// check for possible en passant
+    	// check for an en passant opportunity
     	int diff = init_y - end_y;
     	diff = diff < 0 ? -1 * diff : diff;
     	if (board[init_x][init_y].type == PAWN && diff == 2) last_en_passant = init_x;
+
+    	// check for a captured piece
+    	// TODO: Fix this (didn't work with queen)
+    	if (board[end_x][end_y].team == getEnemy(self_team)) {
+    		addEnemyScore(scoreMap(board[end_x][end_y].type - 1));
+    	}
+
         board[end_x][end_y] = board[init_x][init_y];
         board[init_x][init_y] = blank_space;
     }
+    drawScore();
 }
 
 int colSwap(char curr_col) {

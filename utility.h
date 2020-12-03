@@ -53,6 +53,11 @@ int scoreMap(int id);
 char colMap(int row);
 char rowMap(int row);
 int teamY(int y, int team);
+int charToIntMap(char c);
+char intToCharMap(int i);
+void getScoreStr(char * c1, char * c2, int score);
+void addSelfScore(int score);
+void addEnemyScore(int score);
 void resetScoreString(void);
 
 #endif

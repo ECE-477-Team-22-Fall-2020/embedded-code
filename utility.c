@@ -167,11 +167,59 @@ char rowMap(int row) {
     case 7: return '8';
     }
 
-    return 'XX';
+    return 'X';
 }
 
 int teamY(int y, int team) {
 	return (team == WHITE_TEAM) ? y : 7 - y;
+}
+
+int charToIntMap(char c) {
+	switch(c) {
+	case '0': return 0;
+	case '1': return 1;
+	case '2': return 2;
+	case '3': return 3;
+	case '4': return 4;
+	case '5': return 5;
+	case '6': return 6;
+	case '7': return 7;
+	case '8': return 8;
+	case '9':
+	default:  return 9;
+	}
+}
+
+char intToCharMap(int i) {
+	switch(i) {
+	case 0:  return '0';
+	case 1:  return '1';
+	case 2:  return '2';
+	case 3:  return '3';
+	case 4:  return '4';
+	case 5:  return '5';
+	case 6:  return '6';
+	case 7:  return '7';
+	case 8:  return '8';
+	case 9:
+	default: return '9';
+	}
+}
+
+getScoreStr(char * c1, char * c2, int score) {
+	int n1 = charToIntMap(*c1);
+	int n2 = charToIntMap(* c2);
+
+	*c1 = intToCharMap(n1 + ((n2 + score) / 10));
+	*c2 = intToCharMap((n2 + score) % 10);
+}
+
+void addSelfScore(int score) {
+	getScoreStr(&scoreString[0], &scoreString[1], score);
+}
+
+void addEnemyScore(int score) {
+	getScoreStr(&scoreString[3], &scoreString[4], score);
 }
 
 void resetScoreString() {
