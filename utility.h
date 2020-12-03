@@ -42,7 +42,7 @@ UART_HandleTypeDef huart2;
 
 int strLen(char[]);
 uint8_t stringCompare(char array1[], char array2[], uint16_t length);
-void MessageHandler(void);
+//void MessageHandler(void);
 void delay(int ms);
 int getEnemy(int team);
 int checkInBounds(int row, int col);

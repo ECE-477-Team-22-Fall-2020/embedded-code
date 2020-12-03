@@ -104,5 +104,11 @@ void update_board(void);
 
 void exec_external_move(int init_x, int init_y, int end_x, int end_y);
 
+int colSwap(char curr_col);
+
+void EnemyMoveSwap(char * move);
+
+void MessageHandler(void);
+
 
 #endif /* BOARD_H_ */

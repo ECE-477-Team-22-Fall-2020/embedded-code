@@ -24,6 +24,9 @@ int main(void)
     ADC_enable();
     Button_enable();
     update_board();
+    //while(1){
+    //    update_board();
+    //}
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
 

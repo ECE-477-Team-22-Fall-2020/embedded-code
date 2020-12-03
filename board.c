@@ -53,8 +53,8 @@ void init_Board_White_Bottom(void){
     for(x=0; x < MAX_X; x++){
         newPawn.team = 1;
         board[x][1] = newPawn;
-//        newPawn.team = 2;
-//        board[x][6] = newPawn;
+        newPawn.team = 2;
+        board[x][6] = newPawn;
     }
     //White Pieces
     newBishop.team = 1;
@@ -72,19 +72,19 @@ void init_Board_White_Bottom(void){
     board[3][0] = newKing;
 
     //Black Pieces
-//    newBishop.team = 2;
-//    board[2][7] = newBishop;
-//    board[5][7] = newBishop;
-//    newKnight.team = 2;
-//    board[1][7] = newKnight;
-//    board[6][7] = newKnight;
-//    newRook.team = 2;
-//    board[0][7] = newRook;
-//    board[7][7] = newRook;
-//    newQueen.team = 2;
-//    board[4][7] = newQueen;
-//    newKing.team = 2;
-//    board[3][7] = newKing;
+    newBishop.team = 2;
+    board[2][7] = newBishop;
+    board[5][7] = newBishop;
+    newKnight.team = 2;
+    board[1][7] = newKnight;
+    board[6][7] = newKnight;
+    newRook.team = 2;
+    board[0][7] = newRook;
+    board[7][7] = newRook;
+    newQueen.team = 2;
+    board[4][7] = newQueen;
+    newKing.team = 2;
+    board[3][7] = newKing;
     return;
 }
 
@@ -615,6 +615,107 @@ void exec_external_move(int init_x, int init_y, int end_x, int end_y){
         board[end_x][end_y] = board[init_x][init_y];
         board[init_x][init_y] = blank_space;
     }
+}
+
+int colSwap(char curr_col){
+    int init_x;
+    switch(curr_col){
+        case 'a':
+            init_x = 7;
+            break;
+        case 'b':
+            init_x = 6;
+            break;
+        case 'c':
+            init_x = 5;
+            break;
+        case 'd':
+            init_x = 4;
+            break;
+        case 'e':
+            init_x = 3;
+            break;
+        case 'f':
+            init_x = 2;
+            break;
+        case 'g':
+            init_x = 1;
+            break;
+        case 'h':
+            init_x = 0;
+            break;
+    }
+    return init_x;
+}
+
+void EnemyMoveSwap(char * move){
+    int init_x;
+    int init_y;
+    int end_x;
+    int end_y;
+
+    init_x = colSwap(move[0]);
+    init_y = 7 - (move[1] - 49);
+    end_x = colSwap(move[2]);
+    end_y = 7 - (move[3] - 49);
+    exec_external_move(init_x, init_y, end_x, end_y);
+    init_x++;
+}
+
+void MessageHandler(void)
+{
+    GPIO_TypeDef *port;
+    uint16_t pin;
+
+    //int test = strLen(bluetooth_buffer);
+
+    switch (bluetooth_buffer[0])
+    {
+        case 'B':
+            port = GPIOD;
+            pin = (1 << 15);
+            break;
+        case 'R':
+            port = GPIOD;
+            pin = (1 << 14);
+            break;
+        case 'O':
+            port = GPIOD;
+            pin = (1 << 13);
+            break;
+        case 'G':
+            port = GPIOD;
+            pin = (1 << 12);
+            break;
+    }
+    if (stringCompare(bluetooth_buffer + 2, "LED ON", strLen("LED ON")))
+    {
+        HAL_GPIO_WritePin(port, pin, SET);
+        HAL_UART_Transmit(&huart2, (uint8_t *)"LED is ON.\n",
+                          strLen("LED is ON.\n"), 500);
+    }
+    else if (stringCompare(bluetooth_buffer + 2, "LED OFF", strLen("LED OFF")))
+    {
+        HAL_GPIO_WritePin(port, pin, RESET);
+        HAL_UART_Transmit(&huart2, (uint8_t *)"LED is OFF.\n",
+                          strLen("LED is OFF.\n"), 500);
+    }
+    else
+    {
+        bluetooth_buffer[strLen(bluetooth_buffer)] = '\n';
+        //HAL_UART_Transmit(&huart2, (uint8_t *)bluetooth_buffer, strLen(bluetooth_buffer), 500);
+    }
+
+    if(strLen(bluetooth_buffer) == 5){
+        EnemyMoveSwap(bluetooth_buffer);
+    }
+
+    for (int i = 0; i < BLUETOOTH_BUFFER_SIZE; i++) {
+        bluetooth_buffer[i] = 0;
+    }
+
+    buffer_index = 0;
+    timer_count = 0;
 }
 
 //int main(void)

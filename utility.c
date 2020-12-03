@@ -40,57 +40,7 @@ uint8_t stringCompare(char array1[], char array2[], uint16_t length)
         return 0;
 }
 
-void MessageHandler(void)
-{
-    GPIO_TypeDef *port;
-    uint16_t pin;
 
-    //int test = strLen("Matt");
-
-    switch (bluetooth_buffer[0])
-    {
-        case 'B':
-            port = GPIOD;
-            pin = (1 << 15);
-            break;
-        case 'R':
-            port = GPIOD;
-            pin = (1 << 14);
-            break;
-        case 'O':
-            port = GPIOD;
-            pin = (1 << 13);
-            break;
-        case 'G':
-            port = GPIOD;
-            pin = (1 << 12);
-            break;
-    }
-    if (stringCompare(bluetooth_buffer + 2, "LED ON", strLen("LED ON")))
-    {
-        HAL_GPIO_WritePin(port, pin, SET);
-        HAL_UART_Transmit(&huart2, (uint8_t *)"LED is ON.\n",
-                          strLen("LED is ON.\n"), 500);
-    }
-    else if (stringCompare(bluetooth_buffer + 2, "LED OFF", strLen("LED OFF")))
-    {
-        HAL_GPIO_WritePin(port, pin, RESET);
-        HAL_UART_Transmit(&huart2, (uint8_t *)"LED is OFF.\n",
-                          strLen("LED is OFF.\n"), 500);
-    }
-    else
-    {
-        bluetooth_buffer[strLen(bluetooth_buffer)] = '\n';
-		HAL_UART_Transmit(&huart2, (uint8_t *)bluetooth_buffer, strLen(bluetooth_buffer), 500);
-    }
-
-    for (int i = 0; i < BLUETOOTH_BUFFER_SIZE; i++) {
-    	bluetooth_buffer[i] = 0;
-    }
-
-    buffer_index = 0;
-    timer_count = 0;
-}
 
 // doesn't actually wait one ms
 void delay(int ms) {
