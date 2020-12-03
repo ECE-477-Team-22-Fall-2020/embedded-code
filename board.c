@@ -250,7 +250,7 @@ void update_position(void) {
         castling(changed);
         return;
     }
-    if(num_change == 3) {
+    if (num_change == 3) {
         en_passant(changed);
         return;
     }
