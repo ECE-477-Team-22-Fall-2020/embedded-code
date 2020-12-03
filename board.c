@@ -212,15 +212,17 @@ void en_passant(int changed[]){
 }
 
 void sendMove(int init_x, int init_y, int end_x, int end_y) {
-    bluetooth_buffer[0] = colMap(init_x) + 32;
-    bluetooth_buffer[1] = rowMap(init_y);
-    bluetooth_buffer[2] = colMap(end_x) + 32;
-    bluetooth_buffer[3] = rowMap(end_y);
+	char sendBuffer[5];
+	sendBuffer[0] = colMap(init_x) + 32;
+	sendBuffer[1] = rowMap(init_y);
+	sendBuffer[2] = colMap(end_x) + 32;
+	sendBuffer[3] = rowMap(end_y);
+	sendBuffer[4] = 0x00;
 
-    HAL_UART_Transmit(&huart2, (uint8_t *)bluetooth_buffer, strLen(bluetooth_buffer), 500);
-    for (int i = 0; i < BLUETOOTH_BUFFER_SIZE; i++) {
-        bluetooth_buffer[i] = 0;
-    }
+    HAL_UART_Transmit(&huart2, (uint8_t *)sendBuffer, 4, 500);
+//    for (int i = 0; i < BLUETOOTH_BUFFER_SIZE; i++) {
+//        bluetooth_buffer[i] = 0;
+//    }
 }
 
 void update_position(void) {
