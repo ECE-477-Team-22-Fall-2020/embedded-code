@@ -182,9 +182,32 @@ void castling(int changed[]){
 
 void en_passant(int changed[]){
     //Will probably pass in an array of changed spaces
-    board[changed[2]][changed[3]] = board[changed[4]][changed[5]];
-    board[changed[0]][changed[1]] = blank_space;
-    board[changed[4]][changed[5]] = blank_space;
+    if(changed[1] == changed[3]){
+        board[changed[4]][changed[5]] = board[changed[0]][changed[1]];
+        board[changed[0]][changed[1]] = blank_space;
+        board[changed[2]][changed[3]] = blank_space;
+        sendMove(changed[0], changed[1], changed[4], changed[5]);
+    }else if(changed[1] == changed[5]){
+        if(changed[0] == changed[2]){
+            board[changed[2]][changed[3]] = board[changed[4]][changed[5]];
+            board[changed[0]][changed[1]] = blank_space;
+            board[changed[4]][changed[5]] = blank_space;
+            sendMove(changed[4], changed[5], changed[2], changed[3]);
+        }else{
+            board[changed[2]][changed[3]] = board[changed[0]][changed[1]];
+            board[changed[0]][changed[1]] = blank_space;
+            board[changed[4]][changed[5]] = blank_space;
+            sendMove(changed[0], changed[1], changed[2], changed[3]);
+        }
+    }else{
+        board[changed[0]][changed[1]] = board[changed[4]][changed[5]];
+        board[changed[4]][changed[5]] = blank_space;
+        board[changed[2]][changed[3]] = blank_space;
+        sendMove(changed[4], changed[5], changed[0], changed[1]);
+    }
+//    board[changed[2]][changed[3]] = board[changed[4]][changed[5]];
+//    board[changed[0]][changed[1]] = blank_space;
+//    board[changed[4]][changed[5]] = blank_space;
     return;
 }
 
@@ -216,6 +239,11 @@ void update_position(void){
                 //3 changes en passant
             }}}
     if(num_change == 4){
+        if(board[changed[0]][changed[1]].type == KING){
+            sendMove(changed[0], changed[1], changed[4], changed[5]);
+        }else{
+            sendMove(changed[6], changed[7], changed[2], changed[3]);
+        }
         castling(changed);
         return;
     }
