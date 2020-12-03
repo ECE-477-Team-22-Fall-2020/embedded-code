@@ -616,7 +616,7 @@ void TIM5_IRQHandler(void) {
         	if (board[col][row].team == self_team) {
                 drawSelfPiece(new_active_piece - 1, row, col);
         	} else {
-        		drawEnemyPiece(new_active_piece, -1, -1, row, col);
+        		drawEnemyPiece(new_active_piece - 1, -1, -1, row, col);
         	}
         }
         cached_active_piece = new_active_piece;
