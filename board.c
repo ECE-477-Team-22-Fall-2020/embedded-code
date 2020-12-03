@@ -309,7 +309,7 @@ void drawPossibleMoves(int piece, int row, int col, int currentTeam) {
         }
 
         // en passante
-        int diff = row - last_en_passant;
+        int diff = col - last_en_passant;
         diff = diff < 0 ? -1 * diff : diff;
         if (teamY(row, currentTeam) == 5 && diff == 1 && last_en_passant != -1) {
         	spaces[numSpaces].x = last_en_passant;
@@ -451,6 +451,7 @@ void EXTI0_IRQHandler(void) {
     update_board();
     update_position();
     ledOff();
+    last_en_passant = -1;
     EXTI->PR |= EXTI_PR_PR0;
     return;
 }
@@ -668,6 +669,10 @@ void exec_external_move(int init_x, int init_y, int end_x, int end_y) {
         en_passant(changed);
     }
     else {
+    	// check for possible en passant
+    	int diff = init_y - end_y;
+    	diff = diff < 0 ? -1 * diff : diff;
+    	if (board[init_x][init_y].type == PAWN && diff == 2) last_en_passant = init_x;
         board[end_x][end_y] = board[init_x][init_y];
         board[init_x][init_y] = blank_space;
     }
