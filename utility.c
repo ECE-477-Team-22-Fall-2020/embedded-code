@@ -152,7 +152,7 @@ char colMap(int col) {
     case 7: return 'H';
     }
 
-    return 0x00;
+    return 'X';
 }
 
 char rowMap(int row) {
@@ -167,7 +167,7 @@ char rowMap(int row) {
     case 7: return '8';
     }
 
-    return 0x00;
+    return 'XX';
 }
 
 int teamY(int y, int team) {
