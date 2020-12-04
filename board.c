@@ -492,7 +492,7 @@ int ADC_val(void) {
         //GPIOD->ODR ^= 0x1000;
         team = 1;
     }
-    else if(value < 300){
+    else if(value < 600){
         //GPIOD->ODR ^= 0x2000;
         team = 2;
     }
@@ -670,7 +670,6 @@ void exec_external_move(int init_x, int init_y, int end_x, int end_y) {
     	if (board[init_x][init_y].type == PAWN && diff == 2) last_en_passant = init_x;
 
     	// check for a captured piece
-    	// TODO: Fix this (didn't work with queen)
     	if (board[end_x][end_y].team == getEnemy(self_team)) {
     		addEnemyScore(scoreMap(board[end_x][end_y].type - 1));
     	}
@@ -726,16 +725,17 @@ void EnemyMoveSwap(char * move){
     int piece_id = board[init_x][init_y].type;
     exec_external_move(init_x, init_y, end_x, end_y);
 
+    cached_active_piece = piece_id - 1;
+    cached_col = end_x;
+    cached_row = end_y;
+
     drawEnemyPiece(piece_id - 1, init_y, init_x, end_y, end_x);
     display();
 }
 
-void MessageHandler(void)
-{
-    GPIO_TypeDef *port;
+void MessageHandler(void) {
+    GPIO_TypeDef * port;
     uint16_t pin;
-
-    //int test = strLen(bluetooth_buffer);
 
     switch (bluetooth_buffer[0])
     {
