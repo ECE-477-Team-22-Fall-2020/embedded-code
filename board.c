@@ -270,6 +270,7 @@ void update_position(void) {
             sendMove(changed[2], changed[3], changed[0], changed[1]);
         }
     }
+    GPIOB->ODR = 0;
     return;
 }
 
