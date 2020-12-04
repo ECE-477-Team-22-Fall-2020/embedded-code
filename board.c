@@ -59,9 +59,9 @@ void init_Board_White_Bottom(void) {
     board[0][0] = newRook;
     board[7][0] = newRook;
     newQueen.team = 1;
-    board[4][0] = newQueen;
+    board[3][0] = newQueen;
     newKing.team = 1;
-    board[3][0] = newKing;
+    board[4][0] = newKing;
 
     //Black Pieces
     newBishop.team = 2;
@@ -74,9 +74,9 @@ void init_Board_White_Bottom(void) {
     board[0][7] = newRook;
     board[7][7] = newRook;
     newQueen.team = 2;
-    board[4][7] = newQueen;
+    board[3][7] = newQueen;
     newKing.team = 2;
-    board[3][7] = newKing;
+    board[4][7] = newKing;
     return;
 }
 
@@ -131,9 +131,9 @@ void init_Board_Black_Bottom(void) {
     board[0][0] = newRook;
     board[7][0] = newRook;
     newQueen.team = 2;
-    board[3][0] = newQueen;
+    board[4][0] = newQueen;
     newKing.team = 2;
-    board[4][0] = newKing;
+    board[3][0] = newKing;
 
     //White Pieces
     newBishop.team = 1;
@@ -146,9 +146,9 @@ void init_Board_Black_Bottom(void) {
     board[0][7] = newRook;
     board[7][7] = newRook;
     newQueen.team = 1;
-    board[3][7] = newQueen;
+    board[4][7] = newQueen;
     newKing.team = 1;
-    board[4][7] = newKing;
+    board[3][7] = newKing;
     return;
 }
 
