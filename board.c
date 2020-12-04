@@ -738,6 +738,7 @@ void MessageHandler(void) {
     GPIO_TypeDef * port;
     uint16_t pin;
 
+    drawConnected();
     switch (bluetooth_buffer[0])
     {
         case 'B':
